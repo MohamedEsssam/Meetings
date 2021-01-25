@@ -1,24 +1,26 @@
 const defineAbilitiesFor = (role) => {
   switch (role) {
-    case "Commander":
-      return ["readAll", "update_meeting", "delete_meeting"];
-      break;
+    case "ChiefCommander" || "Commander":
+      return { abilities: ["readAll", "update_meeting", "delete_meeting"] };
 
     case "Admin":
-      return ["create_user"];
-      break;
+      return { abilities: ["create_user"] };
 
     case "Secretary":
-      return ["readAll", "update_meeting", "delete_meeting"];
-      break;
+      return { abilities: ["readAll", "update_meeting", "delete_meeting"] };
 
     case "PoliceArmy":
-      return ["readAll"];
-      break;
+      return { abilities: ["readAll"] };
 
     case "Inquire":
-      return ["readAll", "create_meeting", "update_meeting", "delete_meeting"];
-      break;
+      return {
+        abilities: [
+          "readAll",
+          "create_meeting",
+          "update_meeting",
+          "delete_meeting",
+        ],
+      };
 
     default:
       break;
