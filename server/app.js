@@ -8,6 +8,7 @@ require("./startup/config")();
 require("./startup/cors")(app);
 require("./startup/helmet")(app);
 require("./startup/connectDB");
-// require("./models/createTables");
+require("./models/createTables");
+// require("./seeder/seeder")
 // require("./startup/routes")(app);
 require("./startup/socket.io").init(server);
