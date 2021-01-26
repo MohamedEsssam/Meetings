@@ -1,0 +1,30 @@
+const io = require("../../startup/socket.io");
+const MeetingServices = require("../../services/MeetingServices");
+const MeetingServicesInstance = new MeetingServices();
+
+module.exports = async (req, res) => {
+  const personName = req.body.personName;
+  const personType = req.body.personType;
+  const job = req.body.job;
+  const militaryRank = req.body.militaryRank;
+  const unit = req.body.unit;
+  const army = req.body.army;
+  const administrator = req.body.administrator;
+  const departmentId = req.body.departmentId;
+
+  const meeting = await MeetingServicesInstance.create(
+    personName,
+    personType,
+    job,
+    militaryRank,
+    unit,
+    army,
+    administrator,
+    departmentId
+  );
+
+  if (!meeting) return res.status(500).send("something error !");
+
+  io.getIO().emit("meeting", { action: "create", meeting: meeting });
+  return res.status(200).send(meeting);
+};
