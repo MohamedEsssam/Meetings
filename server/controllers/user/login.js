@@ -6,7 +6,6 @@ module.exports = async (req, res) => {
   const password = req.body.password;
 
   const token = await UserServicesInstance.login(username, password);
-  console.log(token);
   if (!token) return res.status(404).send("User not found.");
 
   return res

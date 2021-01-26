@@ -12,7 +12,7 @@ const defineAbilitiesFor = (role) => {
     case "PoliceArmy":
       return { abilities: ["readAll"] };
 
-    case "Inquire":
+    case "Inquiries":
       return {
         abilities: [
           "readAll",
