@@ -5,7 +5,7 @@ import { Button } from "react-bootstrap";
 function SubmitButton({ title, color }) {
   const { handleSubmit } = useFormikContext();
   return (
-    <Button variant="outline-primary" onClick={handleSubmit}>
+    <Button type="submit" variant="outline-primary" onClick={handleSubmit}>
       {title}
     </Button>
   );

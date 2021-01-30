@@ -18,7 +18,7 @@ export const setUser = async (user) => {
 };
 
 export const removeCurrentUser = async (user) => {
-  await localStorage.removeItem("user");
+  await localStorage.removeItem("token");
 };
 
 export const currentUser = async () => {

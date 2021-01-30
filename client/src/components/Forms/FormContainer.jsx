@@ -2,6 +2,7 @@ import React from "react";
 import { Formik } from "formik";
 
 function FromContainer({
+  innerRef,
   initialValues,
   validationSchema,
   onSubmit,
@@ -9,11 +10,12 @@ function FromContainer({
 }) {
   return (
     <Formik
+      innerRef={innerRef}
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >
-      {() => <>{children}</>}
+      {(values) => <div style={{ float: "right" }}>{children}</div>}
     </Formik>
   );
 }

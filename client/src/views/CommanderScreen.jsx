@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
-import { CardColumns, CardGroup } from "react-bootstrap";
+import { CardColumns } from "react-bootstrap";
 import openSocket from "socket.io-client";
 import { useAuth } from "../context/auth";
 import meetingApi from "../services/MeetingServices";
@@ -8,8 +7,6 @@ import meetingApi from "../services/MeetingServices";
 import AppCard from "../components/Card/AppCard";
 
 const CommenderScreen = () => {
-  const location = useLocation();
-  const history = useHistory();
   const { user } = useAuth();
   const [fetchedMeetings, setFetchedMeetings] = useState([]);
   const [fetched, setFetched] = useState(false);

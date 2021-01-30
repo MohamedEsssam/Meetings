@@ -8,8 +8,9 @@ import userApi from "./services/UserServices";
 import PrivateRoute from "./routes/PrivateRoute";
 
 import LoginScreen from "./views/LoginScreen";
-import AdminScreen from "./views/AdminScreen";
 import CommanderScreen from "./views/CommanderScreen";
+import InquiriesScreen from "./views/InquiriesScreen";
+import AdminScreen from "./views/AdminScreen";
 import AppNavBar from "./components/NavBar/AppNavBar";
 
 function App() {
@@ -37,9 +38,8 @@ function App() {
           <Switch>
             <PrivateRoute path="/" component={CommanderScreen} exact />
             <PrivateRoute path="/admin" component={AdminScreen} exact />
-
+            <PrivateRoute path="/inquires" component={InquiriesScreen} exact />
             <PrivateRoute path="/login" component={LoginScreen} exact />
-            {/* <PrivateRoute path="/admin" component={AdminScreen} exact /> */}
             {/* <PrivateRoute path="/register" component={} /> */}
             {/* <PrivateRoute path="/register" component={Register}/> */}
             {/* <LoginRoute path="/login" component={LoginScreen} /> */}
