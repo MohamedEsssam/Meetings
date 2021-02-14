@@ -11,7 +11,9 @@ import SubmitButton from "./SubmitButton";
 import FormErrorMessage from "./FormErrorMessage";
 
 const validationSchema = Yup.object().shape({
-  username: Yup.string().required("يجب عليك ادخال اسم المستخدم").label("Email"),
+  username: Yup.string()
+    .required("يجب عليك ادخال اسم المستخدم")
+    .label("username"),
   password: Yup.string()
     .required("يجب عليك ادخال كلمة السر")
     .min(3)
@@ -33,7 +35,26 @@ function AppLoginForm(props) {
       setLoginFailed(false);
       setUser(user);
       toast.success("تم تسجيل الدخول بنجاح");
-      history.push("/");
+
+      switch (user["roleType"]) {
+        case "Admin":
+          history.push(`/admin`);
+          break;
+        case "Commender":
+          history.push(`/?departmentId=${user["departmentId"]}`);
+          break;
+        case "ChiefCommander":
+          history.push(`/?departmentId=${user["departmentId"]}`);
+          break;
+        case "Inquiries":
+          history.push(`/inquires`);
+          break;
+        case "PoliceArmy":
+          history.push(`/myMeetings`);
+          break;
+        default:
+          break;
+      }
     } catch (error) {
       setError("أسم المستخدم او كلمة السر خاطئة");
       toast.error("أسم المستخدم او كلمة السر خاطئة");

@@ -1,12 +1,27 @@
 import React from "react";
+import { Col, Row } from "react-bootstrap";
 
 import FormField from "./FormField";
 
 const CivilForm = () => {
   return (
     <>
-      <FormField name="job" placeholder="ادخل الوظيفة" />
-      <FormField name="army" placeholder="ادخل الشركة/الهيئة" />
+      <Row>
+        <Col>
+          <FormField
+            inputType="autoComplete"
+            name="army"
+            placeholder="ادخل الجيش/الشركة/الهيئة"
+          />
+        </Col>
+        <Col>
+          <FormField
+            inputType="autoComplete"
+            name="job"
+            placeholder="ادخل الوظيفة"
+          />
+        </Col>
+      </Row>
     </>
   );
 };

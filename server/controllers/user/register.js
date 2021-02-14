@@ -1,5 +1,9 @@
+const AuthServices = require("../../services/AuthServices");
+const AuthServicesInstance = new AuthServices();
+const DepartmentService = require("../../services/DepartmentServices");
+const DepartmentServiceInstance = new DepartmentService();
 const UserServices = require("../../services/UserServices");
-const UserServicesInstance = new UserServices();
+const UserServicesInstance = new UserServices(AuthServicesInstance, DepartmentServiceInstance);
 
 module.exports = async (req, res) => {
   const name = req.body.name;
@@ -10,6 +14,7 @@ module.exports = async (req, res) => {
   const army = req.body.army;
   const password = req.body.password;
   const roleId = req.body.roleId;
+  const departmentId = req.body.departmentId;
 
   const token = await UserServicesInstance.register(
     name,
@@ -19,7 +24,8 @@ module.exports = async (req, res) => {
     unit,
     army,
     password,
-    roleId
+    roleId,
+    departmentId
   );
   if (!token) return res.status(409).send("User already exist.");
 

@@ -1,0 +1,1 @@
+start cmd.exe /k "cd F:\3samelga7ed\meetings\client\src & call npm start" pause

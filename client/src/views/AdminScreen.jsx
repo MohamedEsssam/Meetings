@@ -4,7 +4,7 @@ import { Button } from "react-bootstrap";
 
 import AppPopOvers from "../components/PopOvers/AppPopOvers";
 import AppModal from "../components/Modal/AppModal";
-import AppMeetingForm from "../components/Forms/MeetingFrom";
+import AppRegisterForm from "../components/Forms/RegisterForm";
 
 const AdminScreen = () => {
   const [show, setShow] = useState(false);
@@ -13,8 +13,8 @@ const AdminScreen = () => {
     <>
       <div style={{ position: "fixed", top: "40%", left: "40%" }}>
         <AppPopOvers
-          title="اضافة شخص جديد"
-          bodyContent="سوف تقوم باضافة شخص جديد"
+          title="أضافة مستخدم جديد"
+          bodyContent="سوف تقوم بأضافة مستخدم جديد"
         >
           <Button
             variant="primary"
@@ -25,8 +25,8 @@ const AdminScreen = () => {
           </Button>
         </AppPopOvers>
       </div>
-      <AppModal show={show} setShow={setShow}>
-        <AppMeetingForm />
+      <AppModal show={show} setShow={setShow} title={"تسجيل مستخدم جديد"}>
+        <AppRegisterForm show={show} setShow={setShow} />
       </AppModal>
     </>
   );

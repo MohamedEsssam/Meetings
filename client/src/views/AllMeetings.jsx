@@ -43,10 +43,9 @@ const CommenderScreen = () => {
   };
 
   const loadMeetings = async () => {
-    const fetchedMeetings = await meetingApi.getAllForSpecificDepartment(
-      user["departmentId"]
-    );
+    const fetchedMeetings = await meetingApi.getAll();
     meetings = fetchedMeetings.slice(0);
+
     setFetchedMeetings(fetchedMeetings);
     setFetched(true);
   };
@@ -109,21 +108,18 @@ const CommenderScreen = () => {
       {fetchedMeetings &&
         fetchedMeetings.map((meeting) => {
           return (
-            user["name"] === meeting["administrator"] &&
-            user["departmentId"] === meeting["departmentId"] && (
-              <AppCard
-                meeting={meeting}
-                cardColor={
-                  meeting["status"].includes("Rejected")
-                    ? "danger"
-                    : meeting["status"].includes("Accepted")
-                    ? "success"
-                    : meeting["status"].includes("Delayed")
-                    ? "warning"
-                    : "primary"
-                }
-              />
-            )
+            <AppCard
+              meeting={meeting}
+              cardColor={
+                meeting["status"].includes("Rejected")
+                  ? "danger"
+                  : meeting["status"].includes("Accepted")
+                  ? "success"
+                  : meeting["status"].includes("Delayed")
+                  ? "warning"
+                  : "primary"
+              }
+            />
           );
         })}
     </CardColumns>

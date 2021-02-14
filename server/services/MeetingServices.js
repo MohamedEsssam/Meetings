@@ -3,6 +3,9 @@ const UserServices = require("./UserServices.js");
 const UserServicesInstance = new UserServices();
 
 class MeetingService {
+  constructor(DepartmentService) {
+    this.DepartmentService = DepartmentService;
+  }
   async create(
     personName,
     personType,
@@ -11,9 +14,12 @@ class MeetingService {
     unit,
     army,
     administrator,
-    departmentId
+    departmentName
   ) {
     const meetingId = await this.generateId();
+    const department = await this.DepartmentService.getDepartmentByName(
+      departmentName
+    );
 
     sql.query(
       "INSERT INTO meeting (meetingId, status, comeAt, personName, personType, job, militaryRank, unit, army, administrator, departmentId)  VALUES (?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?);",
@@ -27,7 +33,7 @@ class MeetingService {
         unit,
         army,
         administrator,
-        departmentId,
+        department.departmentId,
       ],
       (err, results, field) => {
         if (err) throw err;
@@ -48,17 +54,17 @@ class MeetingService {
     job,
     militaryRank,
     administrator,
-    departmentId,
+    departmentName,
     meetingId,
-    userId,
   }) {
     if (!this.validId(meetingId)) return;
-    // if (!this.validId(userId)) return;
 
     const meeting = await this.getMeetingById(meetingId);
     if (!meeting) return;
 
-    //TODO check user ability
+    const department = await this.DepartmentService.getDepartmentByName(
+      departmentName
+    );
 
     sql.query(
       "UPDATE meeting SET status=?, enteredAt=?, exitAt=?, personName=?, personType=?, army=?, unit=?, job=?, militaryRank=?, administrator=?, departmentId=? WHERE meetingId = ?",
@@ -73,7 +79,7 @@ class MeetingService {
         job,
         militaryRank,
         administrator,
-        departmentId,
+        department.departmentId,
         meetingId,
       ],
       (err, result, field) => {
@@ -102,6 +108,17 @@ class MeetingService {
     );
 
     return meeting;
+  }
+
+  async deleteAll() {
+    const meetings = await this.getMeetings();
+    const query = "DELETE FROM meeting";
+
+    sql.query(query, (err, result) => {
+      if (err) throw err;
+    });
+
+    return meetings;
   }
 
   getMeetings(departmentId) {

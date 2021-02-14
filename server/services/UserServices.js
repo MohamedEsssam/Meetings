@@ -1,8 +1,11 @@
 const sql = require("../startup/connectDB");
 const bcrypt = require("bcrypt");
-const AuthServices = require("./AuthServices");
-const AuthServicesInstance = new AuthServices();
 class UserServices {
+  constructor(AuthServices, DepartmentService) {
+    this.AuthServices = AuthServices;
+    this.DepartmentService = DepartmentService;
+  }
+
   async login(username, password) {
     const user = await this.getUserByUsername(username);
     if (!user) return;
@@ -10,7 +13,7 @@ class UserServices {
 
     delete user["password"];
 
-    const token = AuthServicesInstance.generateToken(user);
+    const token = this.AuthServices.generateToken(user);
 
     return token;
   }
@@ -23,20 +26,37 @@ class UserServices {
     unit,
     army,
     password,
-    roleId
+    roleId,
+    departmentName
   ) {
-    let user;
+    let user, department;
     user = await this.getUserByUsername(username);
     if (user) return;
+
+    department = await this.DepartmentService.getDepartmentByName(
+      departmentName
+    );
+    if (!department)
+      department = await this.DepartmentService.create(departmentName);
 
     password = await this.encryptPassword(password);
 
     let query =
-      "INSERT INTO user (userId, name, username, job, militaryRank, unit, army, password, roleId) VALUES (UUID(), ?, ?, ?, ?, ?, ? , ?, ?);";
+      "INSERT INTO user (userId, name, username, job, militaryRank, unit, army, password, roleId, departmentId) VALUES (UUID(), ?, ?, ?, ?, ?, ? , ?, ?, ?);";
 
     sql.query(
       query,
-      [name, username, job, militaryRank, unit, army, password, roleId],
+      [
+        name,
+        username,
+        job,
+        militaryRank,
+        unit,
+        army,
+        password,
+        roleId,
+        department.departmentId,
+      ],
       (err, results, field) => {
         if (err) throw err;
       }
@@ -45,14 +65,27 @@ class UserServices {
     user = await this.getUserByUsername(username);
     delete user["password"];
 
-    const token = AuthServicesInstance.generateToken(user);
+    const token = this.AuthServices.generateToken(user);
 
     return token;
   }
 
+  getAllUsers(departmentName) {
+    const query =
+      "SELECT userId , name, username, job, militaryRank, unit, army, roleType, departmentId, departmentName, password FROM user JOIN role r JOIN department d USING(departmentId) WHERE departmentName = ? ;";
+
+    return new Promise((resolve, reject) => {
+      sql.query(query, [departmentName], (err, result, field) => {
+        if (err) reject(err);
+
+        resolve(result);
+      });
+    });
+  }
+
   getUserByUsername(username) {
     let query =
-      "SELECT userId , name, username, job, militaryRank, unit, army, roleType, password FROM user JOIN role r USING(roleId) WHERE username = ? ;";
+      "SELECT userId , name, username, job, militaryRank, unit, army, roleType, departmentId, departmentName, password FROM user JOIN role r USING(roleId) JOIN department d USING(departmentId) WHERE username = ? ;";
 
     return new Promise((resolve, reject) => {
       sql.query(query, [username], (err, result, field) => {
@@ -65,7 +98,7 @@ class UserServices {
 
   getUserById(userId) {
     let query =
-      "SELECT userId , name, username, job, militaryRank, unit, army, roleType, password FROM user JOIN role r USING(roleId) WHERE userId = ? ;";
+      "SELECT userId , name, username, job, militaryRank, unit, army, roleType, departmentId, departmentName, password FROM user JOIN role r JOIN department d USING(departmentId) WHERE userId = ? ;";
 
     return new Promise((resolve, reject) => {
       sql.query(query, [userId], (err, result, field) => {

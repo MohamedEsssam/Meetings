@@ -1,7 +1,7 @@
-import { Modal } from "react-bootstrap";
 import React from "react";
+import { Modal } from "react-bootstrap";
 
-const AppModal = ({ show, setShow, children }) => {
+const AppModal = ({ show, setShow, title, children }) => {
   return (
     <Modal
       show={show}
@@ -11,12 +11,14 @@ const AppModal = ({ show, setShow, children }) => {
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Modal heading
+        <Modal.Title
+          id="contained-modal-title-vcenter"
+          style={{ position: "relative", left: "70%" }}
+        >
+          {title}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>{children}</Modal.Body>
-      <Modal.Footer></Modal.Footer>
     </Modal>
   );
 };

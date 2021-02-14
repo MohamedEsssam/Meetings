@@ -1,5 +1,7 @@
+const DepartmentService = require("../../services/DepartmentServices");
+const DepartmentServiceInstance = new DepartmentService();
 const MeetingServices = require("../../services/MeetingServices");
-const MeetingServicesInstance = new MeetingServices();
+const MeetingServicesInstance = new MeetingServices(DepartmentServiceInstance);
 
 module.exports = async (req, res) => {
   const departmentId = req.query.departmentId;

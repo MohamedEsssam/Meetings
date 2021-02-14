@@ -1,7 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
+import { Col, Row } from "react-bootstrap";
 import * as Yup from "yup";
 import { useAuth } from "../../context/auth";
+import meetingApi from "../../services/MeetingServices";
+import userApi from "../../services/UserServices";
+import departmentApi from "../../services/departmentServices";
 
 import FromContainer from "./FormContainer";
 import FormField from "./FormField";
@@ -14,7 +18,7 @@ const validationSchema = Yup.object().shape({
     .required("يجب عليك ادخال اسم المستخدم")
     .label("PersonName"),
   personType: Yup.string()
-    .required("يجب عليك ادخال كلمة نوع الزائر")
+    .required("يجب عليك ادخال نوع الزائر")
     .label("PersonType")
     .nullable(),
   job: Yup.string().required("يجب ادخال وظيفة الزائر").label("Job"),
@@ -31,26 +35,81 @@ const validationSchema = Yup.object().shape({
     })
     .label("Unit"),
   army: Yup.string()
-    .when("personType", {
-      is: "Military",
-      then: Yup.string().required("يجب عليك ادخال جيش الزائر"),
-    })
+    .required("يجب عليك ادخال جيش /شركة/هيئة الزائر")
     .label("Army"),
   administrator: Yup.string()
     .required("يجب عليك ادخال اسم الشخص الذي يريد مقابلته")
     .label("Administrator"),
-  departmentId: Yup.string()
+  departmentName: Yup.string()
     .required("يجب عليك ادخال اسم الفرع")
-    .label("DepartmentId"),
+    .label("DepartmentName"),
 });
 
-function AppMeetingForm({ initialValues }) {
+function AppMeetingForm({
+  initialValues,
+  setShow,
+  type = "create",
+  meetingId = null,
+}) {
   const ref = useRef(null);
   const { setUser } = useAuth();
   const [personType, setPersonType] = useState("Military");
+  const [departmentName, setDepartmentName] = useState("");
+  const [administrators, setAdministrators] = useState();
+  const [departments, setDepartments] = useState([]);
 
-  const onSubmit = async (values) => {
-    console.log(values);
+  useEffect(() => {
+    loadDepartment();
+    onDepartmentChange();
+  }, [departmentName]);
+
+  const filterUsers = (arr) => {
+    let ids = arr.map((o) => o.userId);
+
+    return arr.filter(({ userId }, index) => !ids.includes(userId, index + 1));
+  };
+
+  const onDepartmentChange = async () => {
+    const administrators = await userApi.getAll(departmentName);
+    const uniqueadministrators = filterUsers(administrators).map(
+      ({ name }) => name
+    );
+
+    setAdministrators(uniqueadministrators);
+  };
+
+  const loadDepartment = async () => {
+    const items = [];
+    const departments = await departmentApi.getAll();
+    departments.map((department) => {
+      items.push(department["departmentName"]);
+    });
+
+    setDepartments(items);
+  };
+
+  const onSubmit = async (values, { resetForm }) => {
+    try {
+      switch (type) {
+        case "create":
+          await meetingApi.create(values);
+          resetForm();
+          toast.success("تم انشاء الاجتماع بنجاح");
+          setShow(false);
+          break;
+
+        case "update":
+          await meetingApi.update(meetingId, values);
+          toast.success("تم تعديل الاجتماع بنجاح");
+          setShow(false);
+          break;
+
+        default:
+          break;
+      }
+    } catch (error) {
+      toast.error("لقد حدث خطأ في انشاء الاجتماع");
+    }
   };
 
   return (
@@ -68,29 +127,57 @@ function AppMeetingForm({ initialValues }) {
                 unit: "",
                 army: "",
                 administrator: "",
-                departmentId: "",
+                departmentName: "",
               }
         }
         validationSchema={validationSchema}
         onSubmit={onSubmit}
       >
-        <FormField name="personName" placeholder="أدخل اسم الزائر" />
-        <FormField
-          options={[
-            { text: "مدني", value: "Civil" },
-            { text: "عسكري", value: "Military" },
-          ]}
-          inputType="select"
-          name="personType"
-          setField={setPersonType}
-        />
-
+        <Row>
+          <Col>
+            <FormField name="personName" placeholder="أدخل اسم الزائر" />
+          </Col>
+          <Col>
+            <FormField
+              title=" (عسكري / مدني) اختر"
+              options={[
+                { text: "مدني", value: "Civil" },
+                { text: "عسكري", value: "Military" },
+              ]}
+              inputType="select"
+              name="personType"
+              setField={setPersonType}
+            />
+          </Col>
+        </Row>
         {personType === "Civil" ? <CivilForm /> : <MilitaryForm />}
+        <Row>
+          <Col>
+            <FormField
+              options={administrators}
+              inputType="autoComplete"
+              name="administrator"
+              placeholder="اختر الشخص الذي تريد ان تقابله"
+            />
+          </Col>
+          <Col>
+            <FormField
+              options={departments}
+              inputType="autoComplete"
+              name="departmentName"
+              label="أدخل قسم المستخدم"
+              onChange={onDepartmentChange}
+              setField={setDepartmentName}
+            />
+          </Col>
+        </Row>
 
-        <FormField inputType="select" name="departmentId" />
-        <FormField inputType="select" name="administrator" />
-
-        <SubmitButton title="انشاء اجتماع" />
+        <hr style={{ width: "300px" }} />
+        <div style={{ position: "relative", left: "40%" }}>
+          <SubmitButton
+            title={type === "update" ? "تعديل الاجتماع " : "أنشاء الاجتماع"}
+          />
+        </div>
       </FromContainer>
     </>
   );

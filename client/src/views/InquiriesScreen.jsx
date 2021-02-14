@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Button, CardColumns } from "react-bootstrap";
+import { toast } from "react-toastify";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { MdDeleteForever } from "react-icons/md";
 import { IoIosRefreshCircle } from "react-icons/io";
 import openSocket from "socket.io-client";
 import { useAuth } from "../context/auth";
 import meetingApi from "../services/MeetingServices";
+import { uri } from "../config/config";
 
 import AppCard from "../components/Card/AppCard";
 import AppModal from "../components/Modal/AppModal";
@@ -14,37 +17,42 @@ import AppPopOvers from "../components/PopOvers/AppPopOvers";
 
 const InquiresScreen = () => {
   const { user } = useAuth();
+  const history = useHistory();
   const [fetchedMeetings, setFetchedMeetings] = useState([]);
   const [fetched, setFetched] = useState(false);
   const [didMount, setDidMount] = useState(false);
   const [show, setShow] = useState(false);
+  var soundTrack = new Audio(
+    "https://assets.coderrocketfuel.com/pomodoro-times-up.mp3"
+  );
+  soundTrack.muted = false;
 
   let meetings = [];
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   useEffect(() => {
     // setDidMount(true);
-    const socket = openSocket("http://localhost:9000");
+    const socket = openSocket(uri);
 
     if (!fetched) loadMeetings();
     connectToMeeting(socket);
 
+    soundTrack.load();
     // return () => setDidMount(false);
   }, []);
 
   const connectToMeeting = (socket) => {
     socket.on("meeting", (date) => {
       if (date.action === "create") createMeeting(date.meeting);
-      if (date.action === "delete") deleteMeeting(date.meeting);
       if (date.action === "update") updateMeeting(date.meeting);
+      if (date.action === "delete") deleteMeeting(date.meeting);
+      if (date.action === "deleteAll") deleteAllMeeting(date.meetings);
     });
   };
 
   const loadMeetings = async () => {
     const fetchedMeetings = await meetingApi.getAll();
     meetings = fetchedMeetings.slice(0);
-    console.log(meetings);
+
     setFetchedMeetings(fetchedMeetings);
     setFetched(true);
   };
@@ -63,15 +71,38 @@ const InquiresScreen = () => {
     setFetchedMeetings(() => [...[], ...meetings]);
   };
 
+  const deleteAllMeeting = () => {
+    meetings = [];
+    setFetchedMeetings(() => [...[], ...[]]);
+  };
+
   const updateMeeting = (meeting) => {
     let newMeetings = meetings.slice(0);
     newMeetings.map((obj) => {
-      if (obj.meetingId === meeting.meetingID) {
-        //TODO
+      if (obj.meetingId === meeting.meetingId) {
+        obj["personName"] = meeting["personName"];
+        obj["personType"] = meeting["personType"];
+        obj["status"] = meeting["status"];
+        obj["job"] = meeting["job"];
+        obj["militaryRank"] = meeting["militaryRank"];
+        obj["unit"] = meeting["unit"];
+        obj["army"] = meeting["army"];
+        obj["administrator"] = meeting["administrator"];
+        obj["departmentId"] = meeting["departmentId"];
+        obj["departmentName"] = meeting["departmentName"];
       }
     });
 
     setFetchedMeetings(newMeetings);
+  };
+
+  const handleDeleteAll = async () => {
+    try {
+      await meetingApi.removeAll();
+      toast.warning("لقد تم حذف كل الاجتماعات");
+    } catch (error) {
+      toast.error("لقد حدث خطأ ما, لم يتم حذف كل الاجتماعات");
+    }
   };
 
   return (
@@ -81,17 +112,39 @@ const InquiresScreen = () => {
           title="اعادة تحميل الاجتماعات"
           bodyContent="سوف تقوم باعادة تحميل الاجتماعات"
         >
-          <Button variant="secondary" style={styles.button}>
+          <Button
+            variant="secondary"
+            style={styles.button}
+            onClick={() => history.push("/inquires")}
+          >
             <IoIosRefreshCircle size={40} />
           </Button>
         </AppPopOvers>
       </div>
       <CardColumns
-        style={{ margin: "20px", maxWidth: "1170px", float: "right" }}
+        style={{
+          margin: "20px",
+          maxWidth: "1700px",
+          maxHeight: "300",
+          float: "right",
+        }}
       >
         {fetchedMeetings &&
           fetchedMeetings.map((meeting) => {
-            return <AppCard meeting={meeting} />;
+            return (
+              <AppCard
+                meeting={meeting}
+                cardColor={
+                  meeting["status"].includes("Rejected")
+                    ? "danger"
+                    : meeting["status"].includes("Accepted")
+                    ? "success"
+                    : meeting["status"].includes("Delayed")
+                    ? "warning"
+                    : "primary"
+                }
+              />
+            );
           })}
       </CardColumns>
 
@@ -114,13 +167,17 @@ const InquiresScreen = () => {
           title=" حذف كل الاجتماعات"
           bodyContent="احذر سوف تقوم بحذف كل الاجتماعات"
         >
-          <Button variant="danger" style={styles.button}>
+          <Button
+            variant="danger"
+            style={styles.button}
+            onClick={handleDeleteAll}
+          >
             <MdDeleteForever size={40} />
           </Button>
         </AppPopOvers>
       </div>
-      <AppModal show={show} setShow={setShow}>
-        <AppMeetingForm />
+      <AppModal show={show} setShow={setShow} title={"أنشاء اجتماع"}>
+        <AppMeetingForm setShow={setShow} type="create" />
       </AppModal>
     </>
   );

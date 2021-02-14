@@ -1,6 +1,8 @@
 const io = require("../../startup/socket.io");
+const DepartmentService = require("../../services/DepartmentServices");
+const DepartmentServiceInstance = new DepartmentService();
 const MeetingServices = require("../../services/MeetingServices");
-const MeetingServicesInstance = new MeetingServices();
+const MeetingServicesInstance = new MeetingServices(DepartmentServiceInstance);
 
 module.exports = async (req, res) => {
   const meeting = await MeetingServicesInstance.update(req.body);

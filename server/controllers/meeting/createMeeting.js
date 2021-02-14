@@ -1,6 +1,8 @@
 const io = require("../../startup/socket.io");
+const DepartmentService = require("../../services/DepartmentServices");
+const DepartmentServiceInstance = new DepartmentService();
 const MeetingServices = require("../../services/MeetingServices");
-const MeetingServicesInstance = new MeetingServices();
+const MeetingServicesInstance = new MeetingServices(DepartmentServiceInstance);
 
 module.exports = async (req, res) => {
   const personName = req.body.personName;
@@ -10,7 +12,7 @@ module.exports = async (req, res) => {
   const unit = req.body.unit;
   const army = req.body.army;
   const administrator = req.body.administrator;
-  const departmentId = req.body.departmentId;
+  const departmentName = req.body.departmentName;
 
   const meeting = await MeetingServicesInstance.create(
     personName,
@@ -20,7 +22,7 @@ module.exports = async (req, res) => {
     unit,
     army,
     administrator,
-    departmentId
+    departmentName
   );
 
   if (!meeting) return res.status(500).send("something error !");

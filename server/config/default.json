@@ -1,5 +1,6 @@
 {
   "dbName": "",
   "dbPass": "",
-  "authSecret": ""
+  "authSecret": "",
+  "serverIp":""
 }

@@ -14,6 +14,9 @@ class AuthServices {
         "militaryRank",
         "unit",
         "army",
+        "departmentId",
+        "departmentName",
+        "roleType",
       ]),
       ...ability,
     };

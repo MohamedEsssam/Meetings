@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import UserContext from "./context/auth";
 import userApi from "./services/UserServices";
 import PrivateRoute from "./routes/PrivateRoute";
+import "react-toastify/dist/ReactToastify.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import LoginScreen from "./views/LoginScreen";
 import CommanderScreen from "./views/CommanderScreen";
 import InquiriesScreen from "./views/InquiriesScreen";
+import PoliceArmyScreen from "./views/PoliceArmyScreen";
 import AdminScreen from "./views/AdminScreen";
+import AllMeetings from "./views/AllMeetings";
 import AppNavBar from "./components/NavBar/AppNavBar";
 
 function App() {
@@ -37,6 +39,8 @@ function App() {
           {user && <AppNavBar />}
           <Switch>
             <PrivateRoute path="/" component={CommanderScreen} exact />
+            <PrivateRoute path="/myMeetings" component={PoliceArmyScreen} exact />
+            <PrivateRoute path="/allMeetings" component={AllMeetings} exact />
             <PrivateRoute path="/admin" component={AdminScreen} exact />
             <PrivateRoute path="/inquires" component={InquiriesScreen} exact />
             <PrivateRoute path="/login" component={LoginScreen} exact />

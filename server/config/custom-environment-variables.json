@@ -1,5 +1,6 @@
 {
   "dbName": "DB_NAME",
   "dbPass": "DB_PASS",
-  "authSecret": "CP_AUTH_SECRET"
+  "authSecret": "CP_AUTH_SECRET",
+  "serverIp":"SERVER_IP"
 }

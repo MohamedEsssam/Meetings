@@ -1,5 +1,7 @@
+const AuthServices = require("../../services/AuthServices");
+const AuthServicesInstance = new AuthServices();
 const UserServices = require("../../services/UserServices");
-const UserServicesInstance = new UserServices();
+const UserServicesInstance = new UserServices(AuthServicesInstance);
 
 module.exports = async (req, res) => {
   const username = req.body.username;
