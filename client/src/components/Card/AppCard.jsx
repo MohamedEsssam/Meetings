@@ -13,6 +13,7 @@ import { MdDeleteForever } from "react-icons/md";
 import meetingApi from "../../services/MeetingServices";
 import { militaryRanksMap, statusMap } from "../../utils/Map";
 import { useAuth } from "../../context/auth";
+import DelayMeetingForm from "../Forms/DelayMeetingForm";
 
 const AppCard = ({
   title,
@@ -21,6 +22,8 @@ const AppCard = ({
   textColor = "white",
 }) => {
   const [show, setShow] = useState(false);
+  const [show1, setShow1] = useState(false);
+
   const { user } = useAuth();
 
   const handleDelete = async (meetingId) => {
@@ -35,6 +38,12 @@ const AppCard = ({
   const handleUpdate = async (status, meeting) => {
     try {
       meeting["status"] = status;
+      if (meeting["status"] === "Accepted")
+        meeting["enteredAt"] = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+
+      if (meeting["status"] === "Exit")
+        meeting["exitAt"] = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+
       await meetingApi.update(meeting.meetingId, meeting);
       switch (status) {
         case "Accepted":
@@ -45,8 +54,8 @@ const AppCard = ({
           toast.success("تم الرفض");
           break;
 
-        case "Delayed":
-          toast.success("تم تأجيل");
+        case "Exit":
+          toast.success("تم خروج الزائر");
           break;
 
         default:
@@ -113,6 +122,15 @@ const AppCard = ({
               {meeting["enteredAt"] && (
                 <Card.Text style={{ float: "right" }}>
                   {moment(meeting["enteredAt"]).calendar()} :وقت الدخول
+                </Card.Text>
+              )}
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              {meeting["delayDate"] && (
+                <Card.Text style={{ float: "right" }}>
+                  {moment(meeting["delayDate"]).calendar()} :تم التأجيل الي
                 </Card.Text>
               )}
             </Col>
@@ -214,7 +232,10 @@ const AppCard = ({
                   <Button
                     variant="warning"
                     style={styles.button}
-                    onClick={() => handleUpdate("Delayed", meeting)}
+                    onClick={() => {
+                      setShow1(true);
+                      // handleUpdate("Delayed", meeting);
+                    }}
                   >
                     <FcAlarmClock size={40} />
                   </Button>
@@ -227,6 +248,28 @@ const AppCard = ({
                     variant="danger"
                     style={styles.button}
                     onClick={() => handleUpdate("ٌRejected", meeting)}
+                  >
+                    <ImCross size={40} />
+                  </Button>
+                </AppPopOvers>
+              </div>
+            </>
+          )}
+        {meeting["status"].includes("Accepted") &&
+          user["departmentName"] === meeting["departmentName"] && (
+            <>
+              <hr
+                style={{ position: "relative", left: "20%", width: "300px" }}
+              />
+              <div style={{ position: "relative", left: "200px" }}>
+                <AppPopOvers
+                  title="خروج الزائر"
+                  bodyContent="هذا يعني ان الزائر قد خرج من المكتب"
+                >
+                  <Button
+                    variant="dark"
+                    style={styles.button}
+                    onClick={() => handleUpdate("Exit", meeting)}
                   >
                     <ImCross size={40} />
                   </Button>
@@ -251,6 +294,9 @@ const AppCard = ({
             departmentName: meeting["departmentName"],
           }}
         />
+      </AppModal>
+      <AppModal show={show1} setShow={setShow1}>
+        <DelayMeetingForm meeting={meeting} setShow={setShow1} />
       </AppModal>
     </>
   );

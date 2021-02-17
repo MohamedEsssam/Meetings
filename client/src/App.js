@@ -13,6 +13,7 @@ import InquiriesScreen from "./views/InquiriesScreen";
 import PoliceArmyScreen from "./views/PoliceArmyScreen";
 import AdminScreen from "./views/AdminScreen";
 import AllMeetings from "./views/AllMeetings";
+import PermissionScreen from "./views/PermissionScreen";
 import AppNavBar from "./components/NavBar/AppNavBar";
 
 function App() {
@@ -39,14 +40,16 @@ function App() {
           {user && <AppNavBar />}
           <Switch>
             <PrivateRoute path="/" component={CommanderScreen} exact />
-            <PrivateRoute path="/myMeetings" component={PoliceArmyScreen} exact />
+            <PrivateRoute
+              path="/myMeetings"
+              component={PoliceArmyScreen}
+              exact
+            />
             <PrivateRoute path="/allMeetings" component={AllMeetings} exact />
             <PrivateRoute path="/admin" component={AdminScreen} exact />
             <PrivateRoute path="/inquires" component={InquiriesScreen} exact />
             <PrivateRoute path="/login" component={LoginScreen} exact />
-            {/* <PrivateRoute path="/register" component={} /> */}
-            {/* <PrivateRoute path="/register" component={Register}/> */}
-            {/* <LoginRoute path="/login" component={LoginScreen} /> */}
+            <Route path="/permission" component={PermissionScreen} exact />
             <Route
               path="/not-found"
               render={() => {

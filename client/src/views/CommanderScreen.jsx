@@ -83,6 +83,9 @@ const CommenderScreen = () => {
       if (obj.meetingId === meeting.meetingId) {
         obj["personName"] = meeting["personName"];
         obj["personType"] = meeting["personType"];
+        obj["enteredAt"] = meeting["enteredAt"];
+        obj["exitAt"] = meeting["exitAt"];
+        obj["delayDate"] = meeting["delayDate"];
         obj["status"] = meeting["status"];
         obj["job"] = meeting["job"];
         obj["militaryRank"] = meeting["militaryRank"];
@@ -96,22 +99,14 @@ const CommenderScreen = () => {
     setFetchedMeetings(newMeetings);
   };
 
-  const handleDeleteAll = async () => {
-    try {
-      await meetingApi.removeAll();
-      toast.warning("لقد تم حذف كل الاجتماعات");
-    } catch (error) {
-      toast.error("لقد حدث خطأ ما, لم يتم حذف كل الاجتماعات");
-    }
-  };
-
   return (
     <CardColumns style={{ margin: "20px" }}>
       {fetchedMeetings &&
         fetchedMeetings.map((meeting) => {
           return (
             (user["name"] === meeting["administrator"] ||
-              user["abilities"].includes("read_all" || "read_specific")) &&
+              user["abilities"].includes("read_specific") ||
+              user["abilities"].includes("read_all")) &&
             user["departmentId"] === meeting["departmentId"] && (
               <AppCard
                 meeting={meeting}
@@ -122,6 +117,8 @@ const CommenderScreen = () => {
                     ? "success"
                     : meeting["status"].includes("Delayed")
                     ? "warning"
+                    : meeting["status"].includes("Exit")
+                    ? "dark"
                     : "primary"
                 }
               />

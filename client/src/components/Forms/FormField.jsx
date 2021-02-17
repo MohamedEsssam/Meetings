@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormikContext } from "formik";
 // GrUserWorker
 
@@ -6,6 +6,7 @@ import AppTextInput from "../AppTextInput";
 import AppSelectInput from "../AppSelectInput";
 import FormErrorMessage from "./FormErrorMessage";
 import AppAutoComplete from "../AppAutoComplete";
+import AppDateTimeInput from "../AppDateTimeInput";
 
 function FormField({
   name,
@@ -22,6 +23,13 @@ function FormField({
     handleChange,
     values,
   } = useFormikContext();
+
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const handleDateChange = (date) => {
+    setFieldValue(name, date);
+    setSelectedDate(date);
+  };
 
   setField(values[name]);
   return (
@@ -62,6 +70,13 @@ function FormField({
             );
           }}
           getOptionLabel={(option) => option.text}
+        />
+      ) : inputType === "dateTime" ? (
+        <AppDateTimeInput
+          name={name}
+          onBlur={() => setFieldTouched(name)}
+          onChange={handleDateChange}
+          value={selectedDate}
         />
       ) : (
         <AppTextInput

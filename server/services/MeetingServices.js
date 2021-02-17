@@ -47,6 +47,7 @@ class MeetingService {
     status = "Pending",
     enteredAt = null,
     exitAt = null,
+    delayDate = null,
     personName,
     personType,
     army,
@@ -67,11 +68,12 @@ class MeetingService {
     );
 
     sql.query(
-      "UPDATE meeting SET status=?, enteredAt=?, exitAt=?, personName=?, personType=?, army=?, unit=?, job=?, militaryRank=?, administrator=?, departmentId=? WHERE meetingId = ?",
+      "UPDATE meeting SET status=?, enteredAt=?, exitAt=?, delayDate=?, personName=?, personType=?, army=?, unit=?, job=?, militaryRank=?, administrator=?, departmentId=? WHERE meetingId = ?",
       [
         status,
-        enteredAt,
+        enteredAt ? enteredAt.split(".")[0] : null,
         exitAt,
+        delayDate,
         personName,
         personType,
         army,
@@ -125,7 +127,7 @@ class MeetingService {
     if (departmentId)
       return new Promise((resolve, reject) => {
         sql.query(
-          "SELECT meetingId, status, comeAt, enteredAt, exitAt, personName, personType, army, unit, job, militaryRank, administrator, departmentId, departmentName FROM meeting JOIN department d USING(departmentId) WHERE departmentId=?;",
+          "SELECT meetingId, status, comeAt, enteredAt, exitAt, delayDate, personName, personType, army, unit, job, militaryRank, administrator, departmentId, departmentName FROM meeting JOIN department d USING(departmentId) WHERE departmentId=?;",
           [departmentId],
           (err, result, field) => {
             if (err) reject(err);
@@ -137,7 +139,7 @@ class MeetingService {
     else
       return new Promise((resolve, reject) => {
         sql.query(
-          "SELECT meetingId, status, comeAt, enteredAt, exitAt, personName, personType, army, unit, job, militaryRank, administrator, departmentId, departmentName FROM meeting JOIN department d USING(departmentId);",
+          "SELECT meetingId, status, comeAt, enteredAt, exitAt, delayDate, personName, personType, army, unit, job, militaryRank, administrator, departmentId, departmentName FROM meeting JOIN department d USING(departmentId);",
           (err, result, field) => {
             if (err) reject(err);
 
@@ -152,7 +154,7 @@ class MeetingService {
 
     return new Promise((resolve, reject) => {
       sql.query(
-        "SELECT meetingId, status, comeAt, enteredAt, exitAt, personName, personType, army, unit, job, militaryRank, administrator, departmentId, departmentName FROM meeting JOIN department d USING(departmentId) WHERE meetingId= ?;",
+        "SELECT meetingId, status, comeAt, enteredAt, exitAt, delayDate, personName, personType, army, unit, job, militaryRank, administrator, departmentId, departmentName FROM meeting JOIN department d USING(departmentId) WHERE meetingId= ?;",
         [meetingId],
         (err, result, field) => {
           if (err) reject(err);
@@ -167,7 +169,7 @@ class MeetingService {
 
   getMeetingById(meetingId) {
     let query =
-      "SELECT meetingId, status, comeAt, enteredAt, exitAt, personName, personType, army, unit, job, militaryRank, administrator, departmentId, departmentName FROM meeting JOIN department d USING(departmentId) WHERE meetingId= ?;";
+      "SELECT meetingId, status, comeAt, enteredAt, exitAt, delayDate, personName, personType, army, unit, job, militaryRank, administrator, departmentId, departmentName FROM meeting JOIN department d USING(departmentId) WHERE meetingId= ?;";
 
     return new Promise((resolve, reject) => {
       sql.query(query, [meetingId], (err, result, field) => {

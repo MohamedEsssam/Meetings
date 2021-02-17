@@ -9,6 +9,7 @@ statusMap.set("Pending", " في انتظار الموافقة علي الدخو�
 statusMap.set("Accepted", "تم السماح بالدخول");
 statusMap.set("Rejected", "تم رفض الدخول");
 statusMap.set("Delayed", "تم تأجيل الاجتماع");
+statusMap.set("Exit", "تم أنتهاء الاجتماع");
 
 rolesMap.set("ChiefCommander", "قائد الفرع");
 rolesMap.set("Commander", "قائد وحدة");

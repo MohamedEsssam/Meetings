@@ -1,7 +1,7 @@
 const express = require("express");
-const config = require("config")
+const config = require("config");
 const app = express();
-const server = app.listen(9000/*, config.get(serverIp)*/, () => {
+const server = app.listen(9000 /*, config.get(serverIp)*/, () => {
   console.log("app listening on port 9000!");
 });
 

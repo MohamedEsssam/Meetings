@@ -18,9 +18,6 @@ const validationSchema = Yup.object().shape({
     .required("يجب عليك ادخال كلمة السر")
     .min(3)
     .label("Password"),
-  // confirmPassword: Yup.string()
-  // .oneOf([Yup.ref("password"), null], "Passwords do not match")
-  // .required("Password confirmation required"),
 });
 
 function AppLoginForm(props) {

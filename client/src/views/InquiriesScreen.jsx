@@ -83,6 +83,9 @@ const InquiresScreen = () => {
         obj["personName"] = meeting["personName"];
         obj["personType"] = meeting["personType"];
         obj["status"] = meeting["status"];
+        obj["enteredAt"] = meeting["enteredAt"];
+        obj["exitAt"] = meeting["exitAt"];
+        obj["delayDate"] = meeting["delayDate"];
         obj["job"] = meeting["job"];
         obj["militaryRank"] = meeting["militaryRank"];
         obj["unit"] = meeting["unit"];
@@ -141,6 +144,8 @@ const InquiresScreen = () => {
                     ? "success"
                     : meeting["status"].includes("Delayed")
                     ? "warning"
+                    : meeting["status"].includes("Exit")
+                    ? "dark"
                     : "primary"
                 }
               />

@@ -82,6 +82,9 @@ const CommenderScreen = () => {
       if (obj.meetingId === meeting.meetingId) {
         obj["personName"] = meeting["personName"];
         obj["personType"] = meeting["personType"];
+        obj["enteredAt"] = meeting["enteredAt"];
+        obj["exitAt"] = meeting["exitAt"];
+        obj["delayDate"] = meeting["delayDate"];
         obj["status"] = meeting["status"];
         obj["job"] = meeting["job"];
         obj["militaryRank"] = meeting["militaryRank"];
@@ -120,6 +123,8 @@ const CommenderScreen = () => {
                     ? "success"
                     : meeting["status"].includes("Delayed")
                     ? "warning"
+                    : meeting["status"].includes("Exit")
+                    ? "dark"
                     : "primary"
                 }
               />
