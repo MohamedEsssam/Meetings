@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { CardColumns } from "react-bootstrap";
 import { toast } from "react-toastify";
 import openSocket from "socket.io-client";
 import { useAuth } from "../context/auth";
 import meetingApi from "../services/MeetingServices";
+import departmentApi from "../services/departmentServices";
 import audio from "../sound/audioOneTone.mp3";
 import { uri } from "../config/config";
 
@@ -12,6 +12,7 @@ import AppCard from "../components/Card/AppCard";
 const CommenderScreen = () => {
   const { user } = useAuth();
   const [fetchedMeetings, setFetchedMeetings] = useState([]);
+  const [fetchedDepartments, setFetchedDepartments] = useState([]);
   const [fetched, setFetched] = useState(false);
   const [didMount, setDidMount] = useState(false);
   const [show, setShow] = useState(false);
@@ -43,10 +44,13 @@ const CommenderScreen = () => {
   };
 
   const loadMeetings = async () => {
+    const fetchedDepartments = await departmentApi.getAll();
+    setFetchedDepartments(fetchedDepartments);
+
     const fetchedMeetings = await meetingApi.getAll();
     meetings = fetchedMeetings.slice(0);
-
     setFetchedMeetings(fetchedMeetings);
+
     setFetched(true);
   };
 
@@ -81,10 +85,10 @@ const CommenderScreen = () => {
       if (obj.meetingId === meeting.meetingId) {
         obj["personName"] = meeting["personName"];
         obj["personType"] = meeting["personType"];
+        obj["status"] = meeting["status"];
         obj["enteredAt"] = meeting["enteredAt"];
         obj["exitAt"] = meeting["exitAt"];
         obj["delayDate"] = meeting["delayDate"];
-        obj["status"] = meeting["status"];
         obj["job"] = meeting["job"];
         obj["militaryRank"] = meeting["militaryRank"];
         obj["unit"] = meeting["unit"];
@@ -107,27 +111,58 @@ const CommenderScreen = () => {
   };
 
   return (
-    <CardColumns style={{ margin: "20px" }}>
-      {fetchedMeetings &&
-        fetchedMeetings.map((meeting) => {
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        height: "94.25vh",
+        overflowX: "scroll",
+        overflowY: "hidden",
+      }}
+    >
+      {fetchedDepartments &&
+        fetchedDepartments.map((department) => {
           return (
-            <AppCard
-              meeting={meeting}
-              cardColor={
-                meeting["status"].includes("Rejected")
-                  ? "danger"
-                  : meeting["status"].includes("Accepted")
-                  ? "success"
-                  : meeting["status"].includes("Delayed")
-                  ? "warning"
-                  : meeting["status"].includes("Exit")
-                  ? "dark"
-                  : "primary"
-              }
-            />
+            <div style={{ width: "700px", minWidth: "600px" }}>
+              <div
+                style={{ margin: "20px", overflowY: "scroll", height: "90vh" }}
+              >
+                <h1
+                  style={{
+                    fontSize: "30px",
+                    position: "relative",
+                    paddingLeft: "180px",
+                  }}
+                >
+                  {department["departmentName"]}
+                </h1>
+                {fetchedMeetings &&
+                  fetchedMeetings.map((meeting) => {
+                    return meeting["departmentName"] ===
+                      department["departmentName"] ? (
+                      <AppCard
+                        meeting={meeting}
+                        cardColor={
+                          meeting["status"].includes("Rejected")
+                            ? "danger"
+                            : meeting["status"].includes("Accepted")
+                            ? "success"
+                            : meeting["status"].includes("Delayed")
+                            ? "warning"
+                            : meeting["status"].includes("Exit")
+                            ? "dark"
+                            : "primary"
+                        }
+                      />
+                    ) : (
+                      ""
+                    );
+                  })}
+              </div>
+            </div>
           );
         })}
-    </CardColumns>
+    </div>
   );
 };
 

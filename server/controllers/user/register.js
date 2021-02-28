@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
   const army = req.body.army;
   const password = req.body.password;
   const roleId = req.body.roleId;
-  const departmentId = req.body.departmentId;
+  const departmentName = req.body.departmentName;
 
   const token = await UserServicesInstance.register(
     name,
@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
     army,
     password,
     roleId,
-    departmentId
+    departmentName
   );
   if (!token) return res.status(409).send("User already exist.");
 

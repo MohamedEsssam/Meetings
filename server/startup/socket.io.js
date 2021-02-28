@@ -1,16 +1,18 @@
+const Logger = require("../services/LoggerService")
+const logger = new Logger('app')
 let io;
 
 module.exports = {
   init: (server) => {
     io = require("socket.io")(server);
     io.on("connection", (socket) => {
-      console.log("client connected");
+      logger.info("client connected");
     });
 
     return io;
   },
   getIO: () => {
-    if (!io) throw new Error("socket.io not initialized");
+    if (!io) logger.error("socket.io not initialized");
 
     return io;
   },

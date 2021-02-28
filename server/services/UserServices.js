@@ -1,5 +1,7 @@
 const sql = require("../startup/connectDB");
 const bcrypt = require("bcrypt");
+const Logger = require("../services/LoggerService")
+const logger = new Logger('app')
 class UserServices {
   constructor(AuthServices, DepartmentService) {
     this.AuthServices = AuthServices;
@@ -14,6 +16,9 @@ class UserServices {
     delete user["password"];
 
     const token = this.AuthServices.generateToken(user);
+
+    logger.setLogData({username: username})
+    logger.info("Login user done", {username: username})
 
     return token;
   }
@@ -58,7 +63,7 @@ class UserServices {
         department.departmentId,
       ],
       (err, results, field) => {
-        if (err) throw err;
+        if (err) logger.error(err);
       }
     );
 
@@ -66,6 +71,11 @@ class UserServices {
     delete user["password"];
 
     const token = this.AuthServices.generateToken(user);
+
+    logger.setLogData({name: name, username: username, job: job, militaryRank: militaryRank, unit: unit, army: army,
+       password: password, roleId: roleId, departmentId: department['departmentId']})
+    logger.info("Create user done", {name: name, username: username, job: job, militaryRank: militaryRank, unit: unit, army: army,
+                                     password: password, roleId: roleId, departmentId: department['departmentId']})
 
     return token;
   }

@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const pick = require("lodash/pick");
 const config = require("config");
+const Logger = require("../services/LoggerService");
+const logger = new Logger("app");
 const { defineAbilitiesFor } = require("../startup/abilities");
 class AuthServices {
   generateToken(user) {
@@ -21,6 +23,8 @@ class AuthServices {
       ...ability,
     };
     const token = jwt.sign(payload, config.get("authSecret"));
+
+    logger.setLogData("Token generated.");
 
     return token;
   }

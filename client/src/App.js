@@ -49,7 +49,12 @@ function App() {
             <PrivateRoute path="/admin" component={AdminScreen} exact />
             <PrivateRoute path="/inquires" component={InquiriesScreen} exact />
             <PrivateRoute path="/login" component={LoginScreen} exact />
-            <Route path="/permission" component={PermissionScreen} exact />
+            <PrivateRoute
+              path="/permission"
+              component={PermissionScreen}
+              exact
+            />
+
             <Route
               path="/not-found"
               render={() => {

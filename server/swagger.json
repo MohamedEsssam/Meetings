@@ -1,0 +1,725 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "description": "This is all meeting server Api",
+      "version": "1.0.0",
+      "title": "Meeting project api",
+      "termsOfService": "http://swagger.io/terms/",
+      "contact": {
+        "email": "mohamed.essam.diab97@gmail.com"
+      },
+      "license": {
+        "name": "Apache 2.0",
+        "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+      }
+    },
+    "host": "localhost:9000",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "User",
+            "description": "API for users in the system"
+        },
+        
+        {
+            "name": "Meeting",
+            "description": "API for meetings in the system"
+        },
+        {
+            "name": "Permission",
+            "description": "API for permissions in the system"
+        },
+        {
+            "name": "Role",
+            "description": "API for roles in the system"
+        },
+        {
+            "name": "Department",
+            "description": "API for departments in the system"
+        }
+    ],
+    "schemes": ["http", "https"],
+    "consumes": ["application/json", "application/xml"],
+    "produces": ["application/json", "application/xml"],
+    "paths": {
+      "/api/user/login": {
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Login user.",
+          "description": "Login user.",
+          "operationId": "Login",
+          "parameters": [
+              {
+                "name": "user",
+                "in": "body",
+                "required": true,
+                "description": "Login user.",
+                "schema": {
+                    "$ref": "#/definitions/User"
+                }
+              }
+           ],
+          "responses": {
+            "200": {
+                "description": "User logged in successfully.",
+                "schema": {
+                  "$ref": "#/definitions/User"
+                }
+            },
+            "500": {
+              "description": "Invalid data."
+            },
+            "404": {
+              "description": "Invalid username or password."
+            }
+          }
+        }
+      },
+      "/api/user/register": {
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Create new user.",
+          "description": "Create new user.",
+          "operationId": "Register",
+          "parameters": [
+              {
+                "name": "user",
+                "in": "body",
+                "required": true,
+                "description": "Create new user.",
+                "schema": {
+                    "$ref": "#/definitions/NewUser"
+                }
+              }
+           ],
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "User created successfully.",
+                "schema": {
+                  "$ref": "#/definitions/NewUser"
+                }
+            },
+            "500": {
+              "description": "Invalid data."
+            },
+            "409": {
+              "description": "User aleardy exist."
+            }
+          }
+        }
+      },
+      "/api/meeting/": {
+        "post": {
+          "tags": [
+            "Meeting"
+          ],
+          "summary": "Create new meeting.",
+          "description": "Create new meeting.",
+          "operationId": "Create meeting",
+          "parameters": [
+            {
+              "name": "meeting",
+              "in": "body",
+              "required": true,
+              "description": "Create new meeting.",
+              "schema": {
+                  "$ref": "#/definitions/NewMeeting"
+              }
+            }
+          ],
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "New meeting created successfully.",
+                "schema": {
+                  "$ref": "#/definitions/Meetings"
+                }
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Meeting"
+          ],
+          "summary": "Update meeting.",
+          "description": "Update meeting.",
+          "operationId": "Update meeting",
+          "parameters": [
+            {
+              "name": "meeting",
+              "in": "body",
+              "required": true,
+              "description": "Update meeting.",
+              "schema": {
+                  "$ref": "#/definitions/UpdateMeeting"
+              }
+            }
+          ],
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "Meeting updated successfully.",
+                "schema": {
+                  "$ref": "#/definitions/Meeting"
+                }
+            }
+          }
+        },
+        "get": {
+          "tags": [
+            "Meeting"
+          ],
+          "summary": "Get all meetings.",
+          "description": "Get all meetings.",
+          "operationId": "GetAll",
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "Get all meetings successfully.",
+                "schema": {
+                  "$ref": "#/definitions/Meetings"
+                }
+            }
+          }
+        }
+      },
+      "/api/meeting/{meetingId}": {
+        "get": {
+          "tags": [
+            "Meeting"
+          ],
+          "summary": "Get one meeting.",
+          "description": "Get meeting by id.",
+          "operationId": "GetOneMeeting",
+          "parameters": [
+            {
+              "name": "meetingId",
+              "in": "path",
+              "description": "put meeting id.",
+              "required": true,
+              "type": "string"
+            }
+         ],
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "Get meeting successfully.",
+                "schema": {
+                  "$ref": "#/definitions/Meeting"
+                }
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Meeting"
+          ],
+          "summary": "Delete one meeting.",
+          "description": "Delete meeting by id.",
+          "operationId": "DeleteMeeting",
+          "parameters": [
+            {
+              "name": "meetingId",
+              "in": "path",
+              "description": "put meeting id.",
+              "required": true,
+              "type": "string"
+            }
+         ],
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "delete meeting successfully.",
+                "schema": {
+                  "$ref": "#/definitions/Meeting"
+                }
+            }
+          }
+        }
+      },
+      "/api/meeting/deleteAll": {
+        "delete": {
+          "tags": [
+            "Meeting"
+          ],
+          "summary": "Delete all meetings.",
+          "description": "Delete all meetings.",
+          "operationId": "DeleteAllMeetings",
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "delete all meeting successfully.",
+                "schema": {
+                  "$ref": "#/definitions/Meetings"
+                }
+            }
+          }
+        }
+      },
+      "/api/permission/": {
+        "post": {
+          "tags": [
+            "Permission"
+          ],
+          "summary": "Create new permission.",
+          "description": "Create new permission.",
+          "operationId": "Create permission",
+          "parameters": [
+            {
+              "name": "permission",
+              "in": "body",
+              "required": true,
+              "description": "Create new permission.",
+              "schema": {
+                  "$ref": "#/definitions/NewPermission"
+              }
+            }
+          ],
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "New meeting created successfully.",
+                "schema": {
+                  "$ref": "#/definitions/Permissions"
+                }
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Permission"
+          ],
+          "summary": "Update permission.",
+          "description": "Update permission.",
+          "operationId": "UpdatePermission",
+          "parameters": [
+            {
+              "name": "permission",
+              "in": "body",
+              "required": true,
+              "description": "Update permission.",
+              "schema": {
+                  "$ref": "#/definitions/UpdatePermission"
+              }
+            }
+          ],
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "Meeting updated successfully.",
+                "schema": {
+                  "$ref": "#/definitions/Permissions"
+                }
+            }
+          }
+        },
+        "get": {
+          "tags": [
+            "Permission"
+          ],
+          "summary": "Get all permissions.",
+          "description": "Get all permissions.",
+          "operationId": "GetAll",
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "Get all permissions successfully.",
+                "schema": {
+                  "$ref": "#/definitions/Permissions"
+                }
+            }
+          }
+        }
+      },
+      "/api/permission/{permissionId}": {
+        "get": {
+          "tags": [
+            "Permission"
+          ],
+          "summary": "Get one permission.",
+          "description": "Get permission by id.",
+          "operationId": "GetOnePermission",
+          "parameters": [
+            {
+              "name": "permissionId",
+              "in": "path",
+              "description": "put permission id.",
+              "required": true,
+              "type": "string"
+            }
+         ],
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "Get permission successfully.",
+                "schema": {
+                  "$ref": "#/definitions/Permission"
+                }
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Permission"
+          ],
+          "summary": "Delete one permission.",
+          "description": "Delete permission by id.",
+          "operationId": "DeletePermission",
+          "parameters": [
+            {
+              "name": "permissionId",
+              "in": "path",
+              "description": "put permission id.",
+              "required": true,
+              "type": "string"
+            }
+         ],
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "delete permission successfully.",
+                "schema": {
+                  "$ref": "#/definitions/Permission"
+                }
+            }
+          }
+        }
+      },
+      "/api/permission/deleteAll": {
+        "delete": {
+          "tags": [
+            "Permission"
+          ],
+          "summary": "Delete all permissions.",
+          "description": "Delete all permissions.",
+          "operationId": "DeleteAllPermissions",
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "delete all permissions successfully.",
+                "schema": {
+                  "$ref": "#/definitions/Permissions"
+                }
+            }
+          }
+        }
+      },
+      "/api/department/": {
+        "get": {
+          "tags": [
+            "Department"
+          ],
+          "summary": "Get all departments.",
+          "description": "Get all departments.",
+          "operationId": "GetAllDepartments",
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "Get all departments successfully.",
+                "schema": {
+                  "$ref": "#/definitions/Department"
+                }
+            }
+          }
+        }
+      },
+      "/api/role/": {
+        "get": {
+          "tags": [
+            "Role"
+          ],
+          "summary": "Get all roles.",
+          "description": "Get all roles.",
+          "operationId": "GetAllroles",
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+                "description": "Get all roles successfully.",
+                "schema": {
+                  "$ref": "#/definitions/Role"
+                }
+            }
+          }
+        }
+      }
+    },
+    "securityDefinitions":{
+        "JWT":{
+            "name": "Authorization",
+            "in": "header",
+            "type": "apiKey"
+        }
+    },
+    "definitions": {
+        "User": {
+          "required": ["username", "password"],
+          "properties": {
+            "username": {"type": "string"},
+            "password": {"type": "string"}
+          }
+        },
+        "NewUser": {
+            "required": [
+              "name",
+              "username",
+              "password",
+              "job",
+              "militaryRank",
+              "unit",
+              "army",
+              "roleId",
+              "departmentName"
+            ],
+            "properties": {
+              "name": {"type": "string"},
+              "username": {"type": "string"},
+              "password": {"type": "string"},
+              "job": {"type": "string"},
+              "militaryRank": {"type": "string"},
+              "unit": {"type": "string"},
+              "army": {"type": "string"},
+              "roleId": {"type": "string"},
+              "departmentName": {"type": "string"}
+            }
+        },
+        "Meetings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "meetingId":{"type": "string"},
+              "status":{"type": "string", "description": "Meeting Status", "enum": ["Pending", "Accepted", "Rejected", "Delayed", "Exit"]},
+              "comeAt":{"type": "string", "format": "date-time"},
+              "enteredAt":{"type": "string", "format": "date-time"},
+              "exitAt":{"type": "string", "format": "date-time"},
+              "delayDate":{"type": "string", "format": "date-time"},
+              "personName":{"type": "string"},
+              "personType":{"type": "string", "enum": ["Military", "Civil"]},
+              "army":{"type": "string"},
+              "unit":{"type": "string"},
+              "job":{"type": "string"},
+              "militaryRank":{"type": "string"},
+              "administrator":{"type": "string"},
+              "departmentId":{"type": "string"},
+              "departmentName":{"type": "string"}
+            }
+          }
+        },
+        "Meeting": {
+            "type": "object",
+            "properties": {
+              "meetingId":{"type": "string"},
+              "status":{"type": "string", "description": "Meeting Status", "enum": ["Pending", "Accepted", "Rejected", "Delayed", "Exit"]},
+              "comeAt":{"type": "string", "format": "date-time"},
+              "enteredAt":{"type": "string", "format": "date-time"},
+              "exitAt":{"type": "string", "format": "date-time"},
+              "delayDate":{"type": "string", "format": "date-time"},
+              "personName":{"type": "string"},
+              "personType":{"type": "string", "enum": ["Military", "Civil"]},
+              "army":{"type": "string"},
+              "unit":{"type": "string"},
+              "job":{"type": "string"},
+              "militaryRank":{"type": "string"},
+              "administrator":{"type": "string"},
+              "departmentId":{"type": "string"},
+              "departmentName":{"type": "string"}
+          }
+        },
+        "NewMeeting": {
+          "type": "object",
+          "required": [
+            "personName",
+            "personType",
+            "army",
+            "unit",
+            "job",
+            "militaryRank",
+            "administrator",
+            "departmentName"
+          ],
+          "properties": {
+            "personName":{"type": "string"},
+            "personType":{"type": "string", "enum": ["Military", "Civil"]},
+            "army":{"type": "string"},
+            "unit":{"type": "string"},
+            "job":{"type": "string"},
+            "militaryRank":{"type": "string"},
+            "administrator":{"type": "string"},
+            "departmentName":{"type": "string"}
+        }
+        },
+        "UpdateMeeting": {
+        "type": "object",
+        "required": [
+          "meetingId",
+          "status",
+          "comeAt",
+          "enteredAt",
+          "exitAt",
+          "delayDate",
+          "personName",
+          "personType",
+          "army",
+          "unit",
+          "job",
+          "militaryRank",
+          "administrator",
+          "departmentName"
+        ],
+        "properties": {
+          "meetingId":{"type": "string"},
+          "status":{"type": "string", "description": "Meeting Status", "enum": ["Pending", "Accepted", "Rejected", "Delayed", "Exit"]},
+          "comeAt":{"type": "string", "format": "date-time"},
+          "enteredAt":{"type": "string", "format": "date-time"},
+          "exitAt":{"type": "string", "format": "date-time"},
+          "delayDate":{"type": "string", "format": "date-time"},
+          "personName":{"type": "string"},
+          "personType":{"type": "string", "enum": ["Military", "Civil"]},
+          "army":{"type": "string"},
+          "unit":{"type": "string"},
+          "job":{"type": "string"},
+          "militaryRank":{"type": "string"},
+          "administrator":{"type": "string"},
+          "departmentName":{"type": "string"}
+        }
+        },
+        "Department": {
+        "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "departmentId":{"type": "string"},
+              "departmentName":{"type": "string"}
+            }
+          }
+        },
+        "Role": {
+        "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "roleId":{"type": "string"},
+              "roleType":{"type": "string"}
+            }
+          }
+        },
+        "Permissions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "permissionId":{"type": "string"},
+            "representative":{"type": "string"},
+            "unit":{"type": "string"},
+            "destination":{"type": "string"},
+            "notes":{"type": "string"}
+          }
+        }
+        },
+        "Permission": {
+          "type": "object",
+          "properties": {
+            "permissionId":{"type": "string"},
+            "representative":{"type": "string"},
+            "unit":{"type": "string"},
+            "destination":{"type": "string"},
+            "notes":{"type": "string"}
+          }
+        },
+        "NewPermission": {
+        "type": "object",
+        "required": [
+          "representative",
+          "unit",
+          "destination",
+          "notes"
+        ],
+        "properties": {
+          "representative":{"type": "string"},
+          "unit":{"type": "string"},
+          "destination":{"type": "string"},
+          "notes":{"type": "string"}
+      }
+        },
+        "UpdatePermission": {
+      "type": "object",
+      "required": [
+        "representative",
+        "unit",
+        "destination",
+        "notes"
+      ],
+      "properties": {
+        "representative":{"type": "string"},
+        "unit":{"type": "string"},
+        "destination":{"type": "string"},
+        "notes":{"type": "string"}
+      }
+        }
+    }
+  }

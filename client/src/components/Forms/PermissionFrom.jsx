@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
-import { useAuth } from "../../context/auth";
+import { Col, Row } from "react-bootstrap";
 import permissionApi from "../../services/permissionServices";
 
 import FromContainer from "./FormContainer";
@@ -18,10 +18,11 @@ const validationSchema = Yup.object().shape({
     .label("destination"),
 });
 
-const AppPermissionForm = () => {
+const AppPermissionForm = ({ setShow }) => {
   const onSubmit = async (values, { resetForm }) => {
     try {
       const permission = await permissionApi.create(values);
+      setShow(false);
       toast.success("لقد تم تسجيل اذن الاخراج");
     } catch (error) {
       toast.error("لقد حدث خطأ في التحويل لصورة");
@@ -40,14 +41,29 @@ const AppPermissionForm = () => {
         onSubmit={onSubmit}
       >
         <>
-          <FormField name="unit" placeholder="أدخل اسم الوحدة" />
-          <FormField name="representative" placeholder="أدخل اسم المندوب" />
-          <FormField
-            name="destination"
-            placeholder="أدخل اسم الجهة الموجه لها"
-          />
-          <FormField name="notes" placeholder="أدخل الملاحظات" />
-          <SubmitButton title="تحويل لصورة" />
+          <Row>
+            <Col>
+              <FormField name="unit" placeholder="أدخل اسم الوحدة" />
+            </Col>
+            <Col>
+              <FormField name="representative" placeholder="أدخل اسم المندوب" />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <FormField
+                name="destination"
+                placeholder="أدخل اسم الجهة الموجه لها"
+              />
+            </Col>
+            <Col>
+              <FormField name="notes" placeholder="أدخل الملاحظات" />
+            </Col>
+          </Row>
+          <hr style={{ width: "50%" }} />
+          <div style={{ position: "relative", left: "40%" }}>
+            <SubmitButton title="تحويل لصورة" />
+          </div>
         </>
       </FromContainer>
     </>

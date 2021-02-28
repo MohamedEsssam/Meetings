@@ -4,15 +4,23 @@ import { toast } from "react-toastify";
 import { ImCross } from "react-icons/im";
 import { FaCheck } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
-import { FcAlarmClock } from "react-icons/fc";
-import moment from "moment";
-import AppModal from "../Modal/AppModal";
-import AppMeetingForm from "../Forms/MeetingFrom";
-import AppPopOvers from "../PopOvers/AppPopOvers";
+import { GiRank3 } from "react-icons/gi";
 import { MdDeleteForever } from "react-icons/md";
+import {
+  FcBusinessman,
+  FcManager,
+  FcAlarmClock,
+  FcLibrary,
+  FcElectricalThreshold,
+} from "react-icons/fc";
+import moment from "moment";
+import { useAuth } from "../../context/auth";
 import meetingApi from "../../services/MeetingServices";
 import { militaryRanksMap, statusMap } from "../../utils/Map";
-import { useAuth } from "../../context/auth";
+
+import AppModal from "../Modal/AppModal";
+import AppPopOvers from "../PopOvers/AppPopOvers";
+import AppMeetingForm from "../Forms/MeetingFrom";
 import DelayMeetingForm from "../Forms/DelayMeetingForm";
 
 const AppCard = ({
@@ -93,27 +101,33 @@ const AppCard = ({
               <MdDeleteForever size={25} />
             </Button>
           </AppPopOvers>
-          {user["abilities"].includes("update_meeting") && (
-            <AppPopOvers
-              title="تعديل هذا الاجتماع"
-              bodyContent=" سوف تقوم بتعديل هذا الاجتماع"
-            >
-              <Button
-                variant="warning"
-                style={{ width: "50px", height: "50px", borderRadius: "25px" }}
-                onClick={() => setShow(true)}
+          {user["abilities"].includes("update_meeting") &&
+            meeting["status"] === "Pending" && (
+              <AppPopOvers
+                title="تعديل هذا الاجتماع"
+                bodyContent=" سوف تقوم بتعديل هذا الاجتماع"
               >
-                <FiEdit size={25} />
-              </Button>
-            </AppPopOvers>
-          )}
+                <Button
+                  variant="warning"
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    borderRadius: "25px",
+                  }}
+                  onClick={() => setShow(true)}
+                >
+                  <FiEdit size={25} />
+                </Button>
+              </AppPopOvers>
+            )}
         </Card.Header>
         <Card.Body>
           <Card.Title>{title} </Card.Title>
           <Row>
             <Col>
               <Card.Text style={{ float: "right" }}>
-                {moment(meeting["comeAt"]).calendar()} :وقت الوصول
+                {moment(meeting["comeAt"]).calendar()} :وقت الوصول{" "}
+                <FcAlarmClock size={30} />
               </Card.Text>
             </Col>
           </Row>
@@ -121,7 +135,8 @@ const AppCard = ({
             <Col>
               {meeting["enteredAt"] && (
                 <Card.Text style={{ float: "right" }}>
-                  {moment(meeting["enteredAt"]).calendar()} :وقت الدخول
+                  {moment(meeting["enteredAt"]).calendar()} :وقت الدخول{" "}
+                  <FcAlarmClock size={30} />
                 </Card.Text>
               )}
             </Col>
@@ -130,7 +145,8 @@ const AppCard = ({
             <Col>
               {meeting["delayDate"] && (
                 <Card.Text style={{ float: "right" }}>
-                  {moment(meeting["delayDate"]).calendar()} :تم التأجيل الي
+                  {moment(meeting["delayDate"]).calendar()} :الموعد المؤجل الي{" "}
+                  <FcAlarmClock size={30} />
                 </Card.Text>
               )}
             </Col>
@@ -139,7 +155,8 @@ const AppCard = ({
             <Col>
               {meeting["exitAt"] && (
                 <Card.Text style={{ float: "right" }}>
-                  {moment(meeting["exitAt"]).calendar()} :وقت الخروج
+                  {moment(meeting["exitAt"]).calendar()} :وقت الخروج{" "}
+                  <FcAlarmClock size={30} />
                 </Card.Text>
               )}
             </Col>
@@ -148,32 +165,43 @@ const AppCard = ({
           <Row>
             <Col>
               <Card.Text style={{ float: "right" }}>
-                حالة الاجتماع : {statusMap.get(meeting["status"])}
+                حالة الاجتماع : {statusMap.get(meeting["status"])}{" "}
+                <FcElectricalThreshold size={30} />
               </Card.Text>
             </Col>
           </Row>
           <Row>
             <Col>
               <Card.Text style={{ float: "right" }}>
-                اسم الشخص : {meeting["personName"]}
+                اسم الشخص : {meeting["personName"]} <FcManager size={30} />
               </Card.Text>
             </Col>
             <Col>
               <Card.Text style={{ float: "right" }}>
-                عسكري/مدني : {militaryRanksMap.get(meeting["personType"])}
+                عسكري/مدني : {militaryRanksMap.get(meeting["personType"])}{" "}
+                {meeting["personType"] === "Military" ? (
+                  <GiRank3 size={30} />
+                ) : (
+                  <FcManager size={30} />
+                )}
               </Card.Text>
             </Col>
           </Row>
           <Row>
             <Col>
               <Card.Text style={{ float: "right" }}>
-                الوظيفة : {meeting["job"]}
+                الوظيفة : {meeting["job"]}{" "}
+                {meeting["personType"] === "Military" ? (
+                  <GiRank3 size={30} />
+                ) : (
+                  <FcManager size={30} />
+                )}
               </Card.Text>
             </Col>
             {meeting["militaryRank"] && (
               <Col>
                 <Card.Text style={{ float: "right", marginLeft: "30px" }}>
-                  الرتبة : {meeting["militaryRank"]}
+                  الرتبة : {meeting["militaryRank"]} <GiRank3 size={30} />
                 </Card.Text>
               </Col>
             )}
@@ -181,13 +209,13 @@ const AppCard = ({
           <Row>
             <Col>
               <Card.Text style={{ float: "right" }}>
-                جيش/شركة : {meeting["army"]}
+                جيش/شركة : {meeting["army"]} <FcLibrary size={30} />
               </Card.Text>
             </Col>
             {meeting["unit"] && (
               <Col>
                 <Card.Text style={{ float: "right", marginLeft: "30px" }}>
-                  الوحدة : {meeting["unit"]}
+                  الوحدة : {meeting["unit"]} <FcLibrary size={30} />
                 </Card.Text>
               </Col>
             )}
@@ -195,12 +223,13 @@ const AppCard = ({
           <Row>
             <Col>
               <Card.Text style={{ float: "right" }}>
-                قسم : {meeting["departmentName"]}
+                قسم : {meeting["departmentName"]} <FcLibrary size={30} />
               </Card.Text>
             </Col>
             <Col>
               <Card.Text style={{ float: "right" }}>
-                يريد مقابلته : {meeting["administrator"]}
+                يريد مقابلته : {meeting["administrator"]}{" "}
+                <FcBusinessman size={30} />
               </Card.Text>
             </Col>
           </Row>
@@ -234,7 +263,6 @@ const AppCard = ({
                     style={styles.button}
                     onClick={() => {
                       setShow1(true);
-                      // handleUpdate("Delayed", meeting);
                     }}
                   >
                     <FcAlarmClock size={40} />
@@ -306,7 +334,7 @@ const styles = {
   button: {
     width: "80px",
     height: "80px",
-    marginRight: "90px",
+    marginRight: "70px",
     borderRadius: "40px",
     marginBottom: "10px",
   },

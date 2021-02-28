@@ -1,6 +1,8 @@
 const sql = require("../startup/connectDB");
 const UserServices = require("./UserServices.js");
 const UserServicesInstance = new UserServices();
+const Logger = require("../services/LoggerService")
+const logger = new Logger('app')
 
 class MeetingService {
   constructor(DepartmentService) {
@@ -36,10 +38,15 @@ class MeetingService {
         department.departmentId,
       ],
       (err, results, field) => {
-        if (err) throw err;
+        if (err) logger.error(err);
       }
     );
 
+    logger.setLogData({personName: personName,personType: personType, job: job, militaryRank: militaryRank, unit: unit, army: army,
+      administrator: administrator, departmentName: departmentName})
+
+    logger.info("Create meeting done", {personName: personName,personType: personType, job: job, militaryRank: militaryRank, unit: unit, army: army,
+      administrator: administrator, departmentName: departmentName})
     return this.getMeetingById(meetingId);
   }
 
@@ -85,9 +92,19 @@ class MeetingService {
         meetingId,
       ],
       (err, result, field) => {
-        if (err) throw err;
+        if (err) logger.error(err);
       }
     );
+
+    logger.setLogData({status: status, enteredAt: enteredAt, exitAt: exitAt, delayDate: delayDate,
+      personName: personName, personType: personType, army: army, unit: unit, job: job, militaryRank: militaryRank,
+      administrator: administrator, department: department['departmentId'],
+      meetingId: meetingId})
+
+    logger.info("Update meeting done", {status: status, enteredAt: enteredAt, exitAt: exitAt, delayDate: delayDate,
+      personName: personName, personType: personType, army: army, unit: unit, job: job, militaryRank: militaryRank,
+      administrator: administrator, department: department['departmentId'],
+      meetingId: meetingId})
 
     return this.getMeetingById(meetingId);
   }
@@ -105,9 +122,11 @@ class MeetingService {
       "DELETE FROM meeting WHERE meetingId=?;",
       [meetingId],
       (err, result) => {
-        if (err) throw err;
+        if (err) logger.error(err);
       }
     );
+
+    logger.info("Delete meeting done")
 
     return meeting;
   }
@@ -117,8 +136,10 @@ class MeetingService {
     const query = "DELETE FROM meeting";
 
     sql.query(query, (err, result) => {
-      if (err) throw err;
+      if (err) logger.error(err);
     });
+
+    logger.info("Delete all meeting done")
 
     return meetings;
   }

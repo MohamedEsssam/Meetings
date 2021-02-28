@@ -1,5 +1,6 @@
-const { result } = require("lodash");
 const sql = require("../startup/connectDB");
+const Logger = require("../services/LoggerService")
+const logger = new Logger('app')
 
 class DepartmentServices {
   async create(departmentName) {
@@ -9,8 +10,11 @@ class DepartmentServices {
       "INSERT INTO department (departmentId, departmentName) VALUES (?, ?)";
 
     sql.query(query, [departmentId, departmentName], (err, result) => {
-      if (err) throw err;
+      if (err) logger.error(err);
     });
+
+    logger.setLogData({departmentName: departmentName, departmentId: departmentId})
+    logger.info(`Create department: ${query}`, {departmentName: departmentName, departmentId: departmentId})
 
     return await this.getDepartmentById(departmentId);
   }
@@ -41,7 +45,7 @@ class DepartmentServices {
 
   async getDepartmentByName(departmentName) {
     const query = "SELECT * FROM department WHERE departmentName=?";
-
+    
     return new Promise((resolve, reject) => {
       sql.query(query, [departmentName], (err, result) => {
         if (err) reject(err);

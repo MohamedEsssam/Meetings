@@ -11,7 +11,7 @@ const AppNavBar = () => {
   const history = useHistory();
   return (
     <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark">
-      <Navbar.Brand href={`/?departmentId=${user["departmentId"]}`}>
+      <Navbar.Brand href="#" /*{`/?departmentId=${user["departmentId"]}`}*/>
         منظومة الأجتماعات
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />

@@ -28,9 +28,9 @@ const validationSchema = Yup.object().shape({
   roleId: Yup.string()
     .required("يجب عليك ادخال صلاحيات المستخدم")
     .label("RoleId"),
-  departmentId: Yup.string()
+  departmentName: Yup.string()
     .required("يجب عليك ادخال قسم المستخدم")
-    .label("DepartmentId"),
+    .label("DepartmentName"),
   password: Yup.string()
     .required("يجب عليك ادخال كلمة السر")
     .min(3, "كلمة السر يجب ان تكون اكثر من 3 حروف او ارقام")
@@ -105,7 +105,7 @@ function AppRegisterForm({ show, setShow }) {
           army: "",
           unit: "",
           roleId: "",
-          departmentId: "",
+          departmentName: "",
           password: "",
         }}
         validationSchema={validationSchema}
@@ -155,7 +155,7 @@ function AppRegisterForm({ show, setShow }) {
               <FormField
                 options={departments}
                 inputType="autoComplete"
-                name="departmentId"
+                name="departmentName"
                 label="أدخل قسم المستخدم"
               />
             </Col>

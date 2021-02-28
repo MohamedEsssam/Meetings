@@ -82,10 +82,10 @@ const CommenderScreen = () => {
       if (obj.meetingId === meeting.meetingId) {
         obj["personName"] = meeting["personName"];
         obj["personType"] = meeting["personType"];
+        obj["status"] = meeting["status"];
         obj["enteredAt"] = meeting["enteredAt"];
         obj["exitAt"] = meeting["exitAt"];
         obj["delayDate"] = meeting["delayDate"];
-        obj["status"] = meeting["status"];
         obj["job"] = meeting["job"];
         obj["militaryRank"] = meeting["militaryRank"];
         obj["unit"] = meeting["unit"];

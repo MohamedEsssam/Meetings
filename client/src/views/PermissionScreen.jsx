@@ -22,10 +22,6 @@ const PermissionScreen = () => {
   const [fetched, setFetched] = useState(false);
   const [didMount, setDidMount] = useState(false);
   const [show, setShow] = useState(false);
-  var soundTrack = new Audio(
-    "https://assets.coderrocketfuel.com/pomodoro-times-up.mp3"
-  );
-  soundTrack.muted = false;
 
   let permissions = [];
 
@@ -36,7 +32,6 @@ const PermissionScreen = () => {
     if (!fetched) loadPermission();
     connectToPermission(socket);
 
-    soundTrack.load();
     // return () => setDidMount(false);
   }, []);
 
@@ -51,6 +46,18 @@ const PermissionScreen = () => {
 
   const loadPermission = async () => {
     const fetchedPermissions = await permissionApi.getAll();
+    fetchedPermissions.map((permission) => {
+      permission["destination"] = {
+        label: "الجهة الموجه لها",
+        text: permission["destination"],
+      };
+      permission["unit"] = { label: "اسم الوحدة", text: permission["unit"] };
+      permission["representative"] = {
+        label: "مندوب الوحدة",
+        text: permission["representative"],
+      };
+      permission["notes"] = { label: "ملاحظات", text: permission["notes"] };
+    });
     permissions = fetchedPermissions.slice(0);
 
     setFetchedPermissions(fetchedPermissions);
@@ -58,6 +65,18 @@ const PermissionScreen = () => {
   };
 
   const createPermission = (permission) => {
+    permission["destination"] = {
+      label: "الجهة الموجه لها",
+      text: permission["destination"],
+    };
+    permission["unit"] = { label: "اسم الوحدة", text: permission["unit"] };
+    permission["representative"] = {
+      label: "مندوب الوحدة",
+      text: permission["representative"],
+    };
+    permission["notes"] = { label: "ملاحظات", text: permission["notes"] };
+
+    console.log(permission);
     permissions.unshift(permission);
 
     setFetchedPermissions(() => [...[], ...permissions]);
@@ -103,8 +122,8 @@ const PermissionScreen = () => {
     <>
       <div style={{ position: "fixed", top: "10%", left: "10px" }}>
         <AppPopOvers
-          title="اعادة تحميل الاجتماعات"
-          bodyContent="سوف تقوم باعادة تحميل الاجتماعات"
+          title="اعادة تحميل اذونات الاخراج"
+          bodyContent="سوف تقوم باعادة تحميل اذونات الاخراج"
         >
           <Button
             variant="secondary"
@@ -115,19 +134,43 @@ const PermissionScreen = () => {
           </Button>
         </AppPopOvers>
       </div>
-      <AppTextToImage
-        name={[
-          { name: "Mohamed", x: 40, y: 50 },
-          { name: "", x: 40, y: 70 },
-        ]}
-        x={40}
-        y={50}
-      />
+      <div
+        style={{
+          position: "relative",
+          float: "right",
+          top: "20px",
+          right: "15px",
+          display: "flex",
+          flexWrap: "wrap",
+          flex: "0 0 33.333333%",
+          maxWidth: "90%",
+        }}
+      >
+        {fetchedPermissions &&
+          fetchedPermissions.map((permission) => {
+            return (
+              <AppTextToImage
+                representative={{
+                  ...permission["representative"],
+                  ...{ x: 280, y: 30 },
+                }}
+                unit={{ ...permission["unit"], ...{ x: 302, y: 60 } }}
+                destination={{
+                  ...permission["destination"],
+                  ...{ x: 316, y: 90 },
+                }}
+                notes={{ ...permission["notes"], ...{ x: 274, y: 120 } }}
+                x={90}
+                y={50}
+              />
+            );
+          })}
+      </div>
       <div style={{ position: "fixed", top: "74%", left: "10px" }}>
         <div>
           <AppPopOvers
-            title="انشاء اجتماع جديد"
-            bodyContent="سوف تقوم بانشاء اجتماع جديد"
+            title="انشاء اذن جديد"
+            bodyContent="سوف تقوم بانشاء اذن جديد"
           >
             <Button
               variant="primary"
@@ -139,8 +182,8 @@ const PermissionScreen = () => {
           </AppPopOvers>
         </div>
         <AppPopOvers
-          title=" حذف كل الاجتماعات"
-          bodyContent="احذر سوف تقوم بحذف كل الاجتماعات"
+          title=" حذف كل الاذونات"
+          bodyContent="احذر سوف تقوم بحذف كل الاذونات"
         >
           <Button
             variant="danger"
@@ -151,7 +194,7 @@ const PermissionScreen = () => {
           </Button>
         </AppPopOvers>
       </div>
-      <AppModal show={show} setShow={setShow} title={"أنشاء اجتماع"}>
+      <AppModal show={show} setShow={setShow} title={"أنشاء اذن خروج   "}>
         <AppPermissionForm setShow={setShow} type="create" />
       </AppModal>
     </>
