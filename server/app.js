@@ -2,13 +2,13 @@ const express = require("express");
 const config = require("config");
 const path = require("path");
 const Logger = require("./services/LoggerService");
-const logger = new Logger('app');
+const logger = new Logger("app");
 const app = express();
 const server = app.listen(9000 /*, config.get(serverIp)*/, () => {
   logger.info("app listening on port 9000!");
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
 require("./startup/swagger")(app);
 require("./startup/config")();

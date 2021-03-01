@@ -3,7 +3,13 @@ const AuthServicesInstance = new AuthServices();
 const DepartmentService = require("../../services/DepartmentServices");
 const DepartmentServiceInstance = new DepartmentService();
 const UserServices = require("../../services/UserServices");
-const UserServicesInstance = new UserServices(AuthServicesInstance, DepartmentServiceInstance);
+const UserServicesInstance = new UserServices(
+  AuthServicesInstance,
+  DepartmentServiceInstance
+);
+const {
+  UserAlreadyExistException,
+} = require("../../exceptions/UserAlreadyExistException");
 
 module.exports = async (req, res) => {
   const name = req.body.name;
@@ -27,7 +33,7 @@ module.exports = async (req, res) => {
     roleId,
     departmentName
   );
-  if (!token) return res.status(409).send("User already exist.");
+  if (!token) return res.status(409).send(UserAlreadyExistException);
 
   return res
     .status(200)
