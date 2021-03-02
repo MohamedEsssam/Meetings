@@ -68,12 +68,8 @@ function AppLoginForm(props) {
       >
         <>
           <FormErrorMessage error={error} visible={loginFailed} />
-          <FormField name="username" placeholder="أدخل اسم المستخدم" />
-          <FormField
-            name="password"
-            placeholder="أدخل كلمة السر"
-            type="password"
-          />
+          <FormField name="username" label="أدخل اسم المستخدم" />
+          <FormField name="password" label="أدخل كلمة السر" type="password" />
           <SubmitButton title="دخول" />
         </>
       </FromContainer>

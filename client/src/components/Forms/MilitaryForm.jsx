@@ -8,11 +8,7 @@ const MilitaryForm = () => {
     <>
       <Row>
         <Col>
-          <FormField
-            inputType="autoComplete"
-            name="job"
-            placeholder="ادخل الوظيفة"
-          />
+          <FormField inputType="autoComplete" name="job" label="ادخل الوظيفة" />
         </Col>
         <Col>
           <FormField
@@ -30,7 +26,7 @@ const MilitaryForm = () => {
             options={army}
             inputType="autoComplete"
             name="army"
-            placeholder="ادخل الجيش/الشركة/الهيئة"
+            label="ادخل الجيش/الشركة/الهيئة"
           />
         </Col>
         <Col>
@@ -38,7 +34,7 @@ const MilitaryForm = () => {
             options={unit}
             inputType="autoComplete"
             name="unit"
-            placeholder="ادخل الوحدة"
+            label="ادخل الوحدة"
           />
         </Col>
       </Row>

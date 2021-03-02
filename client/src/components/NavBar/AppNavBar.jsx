@@ -1,9 +1,11 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
+import { Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { GiRank3 } from "react-icons/gi";
+import Chip from "@material-ui/core/Chip";
+import Avatar from "@material-ui/core/Avatar";
 import { useAuth } from "../../context/auth";
 import userApi from "../../services/UserServices";
-
-import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 
 const AppNavBar = () => {
   const { user, setUser } = useAuth();
@@ -75,7 +77,23 @@ const AppNavBar = () => {
           )}
         </Nav>
         <Nav style={{ position: "relative", right: "50px" }}>
+          <Chip
+            style={{ flexDirection: "row-reverse", backgroundColor: "#fff" }}
+            avatar={
+              <Avatar
+                style={{
+                  position: "relative",
+                  right: "10px",
+                  backgroundColor: "#D3D3D3",
+                }}
+              >
+                <GiRank3 size={20} />
+              </Avatar>
+            }
+            label={user["job"]}
+          />
           <NavDropdown
+            style={{ fontWeight: "bold" }}
             title={user["militaryRank"] + " / " + user["name"]}
             id="collasible-nav-dropdown"
           >

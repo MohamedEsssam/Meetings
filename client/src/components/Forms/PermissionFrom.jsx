@@ -43,21 +43,18 @@ const AppPermissionForm = ({ setShow }) => {
         <>
           <Row>
             <Col>
-              <FormField name="unit" placeholder="أدخل اسم الوحدة" />
+              <FormField name="unit" label="أدخل اسم الوحدة" />
             </Col>
             <Col>
-              <FormField name="representative" placeholder="أدخل اسم المندوب" />
+              <FormField name="representative" label="أدخل اسم المندوب" />
             </Col>
           </Row>
           <Row>
             <Col>
-              <FormField
-                name="destination"
-                placeholder="أدخل اسم الجهة الموجه لها"
-              />
+              <FormField name="destination" label="أدخل اسم الجهة الموجه لها" />
             </Col>
             <Col>
-              <FormField name="notes" placeholder="أدخل الملاحظات" />
+              <FormField name="notes" label="أدخل الملاحظات" />
             </Col>
           </Row>
           <hr style={{ width: "50%" }} />

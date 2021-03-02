@@ -11,15 +11,11 @@ const CivilForm = () => {
           <FormField
             inputType="autoComplete"
             name="army"
-            placeholder="ادخل الجيش/الشركة/الهيئة"
+            label="ادخل الجيش/الشركة/الهيئة"
           />
         </Col>
         <Col>
-          <FormField
-            inputType="autoComplete"
-            name="job"
-            placeholder="ادخل الوظيفة"
-          />
+          <FormField inputType="autoComplete" name="job" label="ادخل الوظيفة" />
         </Col>
       </Row>
     </>

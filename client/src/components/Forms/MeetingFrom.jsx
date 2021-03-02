@@ -135,7 +135,7 @@ function AppMeetingForm({
       >
         <Row>
           <Col>
-            <FormField name="personName" placeholder="أدخل اسم الزائر" />
+            <FormField name="personName" label="أدخل اسم الزائر" />
           </Col>
           <Col>
             <FormField
@@ -157,7 +157,7 @@ function AppMeetingForm({
               options={administrators}
               inputType="autoComplete"
               name="administrator"
-              placeholder="اختر الشخص الذي تريد ان تقابله"
+              label="اختر الشخص الذي تريد ان تقابله"
             />
           </Col>
           <Col>

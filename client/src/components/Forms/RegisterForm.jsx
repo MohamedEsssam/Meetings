@@ -115,7 +115,7 @@ function AppRegisterForm({ show, setShow }) {
           <FormErrorMessage error={error} visible={RegisterFailed} />
           <Row>
             <Col>
-              <FormField name="name" placeholder="أدخل اسم الحقيقي المستخدم" />
+              <FormField name="name" label="أدخل اسم الحقيقي المستخدم" />
             </Col>
             <Col>
               <FormField
@@ -172,7 +172,7 @@ function AppRegisterForm({ show, setShow }) {
               />
             </Col>
             <Col>
-              <FormField name="username" placeholder="أدخل اسم المستخدم" />
+              <FormField name="username" label="أدخل اسم المستخدم" />
             </Col>
           </Row>
 
@@ -180,14 +180,14 @@ function AppRegisterForm({ show, setShow }) {
             <Col>
               <FormField
                 name="confirmPassword"
-                placeholder="اعد كتابة كلمة السر"
+                label="اعد كتابة كلمة السر"
                 type="password"
               />
             </Col>
             <Col>
               <FormField
                 name="password"
-                placeholder="أدخل كلمة السر"
+                label="أدخل كلمة السر"
                 type="password"
               />
             </Col>

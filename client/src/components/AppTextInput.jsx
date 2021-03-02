@@ -6,7 +6,7 @@ const AppTextInput = ({ width = "30%", iconType, iconSize, ...otherProps }) => {
   return (
     <div>
       {/* {iconType&&<AppIcons/>} */}
-      <TextField style={styles.input} {...otherProps} />
+      <TextField style={styles.input} {...otherProps} variant="outlined" />
     </div>
   );
 };
@@ -14,12 +14,15 @@ const AppTextInput = ({ width = "30%", iconType, iconSize, ...otherProps }) => {
 let styles = {
   container: {},
   input: {
-    width: "300px",
-    border: "1px solid #c8c8c8",
+    width: "317px",
+    right: "10px",
     color: "#707070",
     padding: "10px",
     margin: "17px",
     outline: "none",
+    textAlign: "center",
+    justifyContent: "center",
+    itemAlign: "center",
   },
 };
 
