@@ -8,6 +8,7 @@ import audio from "../sound/audioOneTone.mp3";
 import { uri } from "../config/config";
 
 import AppCard from "../components/Card/AppCard";
+import AppRadioInputGroup from "../components/AppRadioInputGroup";
 
 const CommenderScreen = () => {
   const { user } = useAuth();
@@ -15,7 +16,8 @@ const CommenderScreen = () => {
   const [fetchedDepartments, setFetchedDepartments] = useState([]);
   const [fetched, setFetched] = useState(false);
   const [didMount, setDidMount] = useState(false);
-  const [show, setShow] = useState(false);
+  const [radioValue, setRadioValue] = useState("");
+  const [inputValue, setInputValue] = useState("");
   const audioTune = new Audio(audio);
 
   let meetings = [];
@@ -111,58 +113,75 @@ const CommenderScreen = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        height: "94.25vh",
-        overflowX: "scroll",
-        overflowY: "hidden",
-      }}
-    >
-      {fetchedDepartments &&
-        fetchedDepartments.map((department) => {
-          return (
-            <div style={{ width: "700px", minWidth: "600px" }}>
-              <div
-                style={{ margin: "20px", overflowY: "scroll", height: "90vh" }}
-              >
-                <h1
+    <>
+      <AppRadioInputGroup
+        radioValue={radioValue}
+        setRadioValue={setRadioValue}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+      />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          height: "94.25vh",
+          overflowX: "scroll",
+          overflowY: "hidden",
+        }}
+      >
+        {fetchedDepartments &&
+          fetchedDepartments.map((department) => {
+            return (
+              <div style={{ width: "700px", minWidth: "600px" }}>
+                <div
                   style={{
-                    fontSize: "30px",
-                    position: "relative",
-                    paddingLeft: "180px",
+                    margin: "20px",
+                    overflowY: "scroll",
+                    height: "90vh",
                   }}
                 >
-                  {department["departmentName"]}
-                </h1>
-                {fetchedMeetings &&
-                  fetchedMeetings.map((meeting) => {
-                    return meeting["departmentName"] ===
-                      department["departmentName"] ? (
-                      <AppCard
-                        meeting={meeting}
-                        cardColor={
-                          meeting["status"].includes("Rejected")
-                            ? "danger"
-                            : meeting["status"].includes("Accepted")
-                            ? "success"
-                            : meeting["status"].includes("Delayed")
-                            ? "warning"
-                            : meeting["status"].includes("Exit")
-                            ? "dark"
-                            : "primary"
-                        }
-                      />
-                    ) : (
-                      ""
-                    );
-                  })}
+                  <h1
+                    style={{
+                      fontSize: "30px",
+                      position: "relative",
+                      paddingLeft: "180px",
+                    }}
+                  >
+                    {department["departmentName"]}
+                  </h1>
+                  {fetchedMeetings &&
+                    fetchedMeetings.map((meeting) => {
+                      return meeting["status"].includes(radioValue) &&
+                        meeting["personName"].includes(inputValue) ? (
+                        meeting["departmentName"] ===
+                        department["departmentName"] ? (
+                          <AppCard
+                            meeting={meeting}
+                            cardColor={
+                              meeting["status"].includes("Rejected")
+                                ? "danger"
+                                : meeting["status"].includes("Accepted")
+                                ? "success"
+                                : meeting["status"].includes("Delayed")
+                                ? "warning"
+                                : meeting["status"].includes("Exit")
+                                ? "dark"
+                                : "primary"
+                            }
+                          />
+                        ) : (
+                          ""
+                        )
+                      ) : (
+                        ""
+                      );
+                    })}
+                </div>
               </div>
-            </div>
-          );
-        })}
-    </div>
+            );
+          })}
+      </div>
+    </>
   );
 };
 

@@ -9,7 +9,6 @@ import userApi from "../../services/UserServices";
 
 const AppNavBar = () => {
   const { user, setUser } = useAuth();
-  console.log(user);
   const history = useHistory();
   return (
     <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark">

@@ -1,11 +1,9 @@
 import React from "react";
-import { Field } from "formik";
 import TextField from "@material-ui/core/TextField";
 
 const AppTextInput = ({ width = "30%", iconType, iconSize, ...otherProps }) => {
   return (
     <div>
-      {/* {iconType&&<AppIcons/>} */}
       <TextField style={styles.input} {...otherProps} variant="outlined" />
     </div>
   );

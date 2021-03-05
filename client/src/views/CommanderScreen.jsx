@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { CardColumns } from "react-bootstrap";
-import { toast } from "react-toastify";
 import openSocket from "socket.io-client";
 import { useAuth } from "../context/auth";
 import meetingApi from "../services/MeetingServices";
-import audio from "../sound/audioOneTone.mp3";
 import { uri } from "../config/config";
 
 import AppCard from "../components/Card/AppCard";
+import AppRadioInputGroup from "../components/AppRadioInputGroup";
+import audio from "../sound/audioOneTone.mp3";
 
 const CommenderScreen = () => {
   const { user } = useAuth();
   const [fetchedMeetings, setFetchedMeetings] = useState([]);
   const [fetched, setFetched] = useState(false);
   const [didMount, setDidMount] = useState(false);
-  const [show, setShow] = useState(false);
+  const [radioValue, setRadioValue] = useState("");
+  const [inputValue, setInputValue] = useState("");
   const audioTune = new Audio(audio);
-
   let meetings = [];
+
   useEffect(() => {
     // setDidMount(true);
     audioTune.load();
@@ -100,32 +101,41 @@ const CommenderScreen = () => {
   };
 
   return (
-    <CardColumns style={{ margin: "20px" }}>
-      {fetchedMeetings &&
-        fetchedMeetings.map((meeting) => {
-          return (
-            (user["name"] === meeting["administrator"] ||
-              user["abilities"].includes("read_specific") ||
-              user["abilities"].includes("read_all")) &&
-            user["departmentId"] === meeting["departmentId"] && (
-              <AppCard
-                meeting={meeting}
-                cardColor={
-                  meeting["status"].includes("Rejected")
-                    ? "danger"
-                    : meeting["status"].includes("Accepted")
-                    ? "success"
-                    : meeting["status"].includes("Delayed")
-                    ? "warning"
-                    : meeting["status"].includes("Exit")
-                    ? "dark"
-                    : "primary"
-                }
-              />
-            )
-          );
-        })}
-    </CardColumns>
+    <>
+      <AppRadioInputGroup
+        radioValue={radioValue}
+        setRadioValue={setRadioValue}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+      />
+      <CardColumns style={{ margin: "20px" }}>
+        {fetchedMeetings &&
+          fetchedMeetings.map((meeting) => {
+            return meeting["status"].includes(radioValue) &&
+              meeting["personName"].includes(inputValue)
+              ? (user["name"] === meeting["administrator"] ||
+                  user["abilities"].includes("read_specific") ||
+                  user["abilities"].includes("read_all")) &&
+                  user["departmentId"] === meeting["departmentId"] && (
+                    <AppCard
+                      meeting={meeting}
+                      cardColor={
+                        meeting["status"].includes("Rejected")
+                          ? "danger"
+                          : meeting["status"].includes("Accepted")
+                          ? "success"
+                          : meeting["status"].includes("Delayed")
+                          ? "warning"
+                          : meeting["status"].includes("Exit")
+                          ? "dark"
+                          : "primary"
+                      }
+                    />
+                  )
+              : "";
+          })}
+      </CardColumns>
+    </>
   );
 };
 

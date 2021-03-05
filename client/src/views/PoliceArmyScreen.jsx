@@ -8,13 +8,15 @@ import audio from "../sound/audioOneTone.mp3";
 import { uri } from "../config/config";
 
 import AppCard from "../components/Card/AppCard";
+import AppRadioInputGroup from "../components/AppRadioInputGroup";
 
 const CommenderScreen = () => {
   const { user } = useAuth();
   const [fetchedMeetings, setFetchedMeetings] = useState([]);
   const [fetched, setFetched] = useState(false);
   const [didMount, setDidMount] = useState(false);
-  const [show, setShow] = useState(false);
+  const [radioValue, setRadioValue] = useState("");
+  const [inputValue, setInputValue] = useState("");
   const audioTune = new Audio(audio);
 
   let meetings = [];
@@ -108,30 +110,39 @@ const CommenderScreen = () => {
   };
 
   return (
-    <CardColumns style={{ margin: "20px" }}>
-      {fetchedMeetings &&
-        fetchedMeetings.map((meeting) => {
-          return (
-            user["name"] === meeting["administrator"] &&
-            user["departmentId"] === meeting["departmentId"] && (
-              <AppCard
-                meeting={meeting}
-                cardColor={
-                  meeting["status"].includes("Rejected")
-                    ? "danger"
-                    : meeting["status"].includes("Accepted")
-                    ? "success"
-                    : meeting["status"].includes("Delayed")
-                    ? "warning"
-                    : meeting["status"].includes("Exit")
-                    ? "dark"
-                    : "primary"
-                }
-              />
-            )
-          );
-        })}
-    </CardColumns>
+    <>
+      <AppRadioInputGroup
+        radioValue={radioValue}
+        setRadioValue={setRadioValue}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+      />
+      <CardColumns style={{ margin: "20px" }}>
+        {fetchedMeetings &&
+          fetchedMeetings.map((meeting) => {
+            return meeting["status"].includes(radioValue) &&
+              meeting["personName"].includes(inputValue)
+              ? user["name"] === meeting["administrator"] &&
+                  user["departmentId"] === meeting["departmentId"] && (
+                    <AppCard
+                      meeting={meeting}
+                      cardColor={
+                        meeting["status"].includes("Rejected")
+                          ? "danger"
+                          : meeting["status"].includes("Accepted")
+                          ? "success"
+                          : meeting["status"].includes("Delayed")
+                          ? "warning"
+                          : meeting["status"].includes("Exit")
+                          ? "dark"
+                          : "primary"
+                      }
+                    />
+                  )
+              : "";
+          })}
+      </CardColumns>
+    </>
   );
 };
 
