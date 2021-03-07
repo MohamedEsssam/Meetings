@@ -48,6 +48,12 @@ const removeAll = async () => {
   return meetings;
 };
 
+const hideAll = async () => {
+  const { data: meetings } = await http.delete(`${endpoint}/hideAll`);
+
+  return meetings;
+};
+
 export default {
   getAll,
   getAllForSpecificDepartment,
@@ -56,4 +62,5 @@ export default {
   update,
   remove,
   removeAll,
+  hideAll,
 };

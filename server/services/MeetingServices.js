@@ -1,8 +1,8 @@
 const sql = require("../startup/connectDB");
 const UserServices = require("./UserServices.js");
 const UserServicesInstance = new UserServices();
-const Logger = require("../services/LoggerService")
-const logger = new Logger('app')
+const Logger = require("../services/LoggerService");
+const logger = new Logger("app");
 
 class MeetingService {
   constructor(DepartmentService) {
@@ -24,7 +24,7 @@ class MeetingService {
     );
 
     sql.query(
-      "INSERT INTO meeting (meetingId, status, comeAt, personName, personType, job, militaryRank, unit, army, administrator, departmentId)  VALUES (?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?);",
+      "INSERT INTO meeting (meetingId, status, comeAt, personName, personType, job, militaryRank, unit, army, administrator, hidden, departmentId)  VALUES (?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?);",
       [
         meetingId,
         "Pending",
@@ -35,6 +35,7 @@ class MeetingService {
         unit,
         army,
         administrator,
+        0,
         department.departmentId,
       ],
       (err, results, field) => {
@@ -42,11 +43,27 @@ class MeetingService {
       }
     );
 
-    logger.setLogData({personName: personName,personType: personType, job: job, militaryRank: militaryRank, unit: unit, army: army,
-      administrator: administrator, departmentName: departmentName})
+    logger.setLogData({
+      personName: personName,
+      personType: personType,
+      job: job,
+      militaryRank: militaryRank,
+      unit: unit,
+      army: army,
+      administrator: administrator,
+      departmentName: departmentName,
+    });
 
-    logger.info("Create meeting done", {personName: personName,personType: personType, job: job, militaryRank: militaryRank, unit: unit, army: army,
-      administrator: administrator, departmentName: departmentName})
+    logger.info("Create meeting done", {
+      personName: personName,
+      personType: personType,
+      job: job,
+      militaryRank: militaryRank,
+      unit: unit,
+      army: army,
+      administrator: administrator,
+      departmentName: departmentName,
+    });
     return this.getMeetingById(meetingId);
   }
 
@@ -96,15 +113,37 @@ class MeetingService {
       }
     );
 
-    logger.setLogData({status: status, enteredAt: enteredAt, exitAt: exitAt, delayDate: delayDate,
-      personName: personName, personType: personType, army: army, unit: unit, job: job, militaryRank: militaryRank,
-      administrator: administrator, department: department['departmentId'],
-      meetingId: meetingId})
+    logger.setLogData({
+      status: status,
+      enteredAt: enteredAt,
+      exitAt: exitAt,
+      delayDate: delayDate,
+      personName: personName,
+      personType: personType,
+      army: army,
+      unit: unit,
+      job: job,
+      militaryRank: militaryRank,
+      administrator: administrator,
+      department: department["departmentId"],
+      meetingId: meetingId,
+    });
 
-    logger.info("Update meeting done", {status: status, enteredAt: enteredAt, exitAt: exitAt, delayDate: delayDate,
-      personName: personName, personType: personType, army: army, unit: unit, job: job, militaryRank: militaryRank,
-      administrator: administrator, department: department['departmentId'],
-      meetingId: meetingId})
+    logger.info("Update meeting done", {
+      status: status,
+      enteredAt: enteredAt,
+      exitAt: exitAt,
+      delayDate: delayDate,
+      personName: personName,
+      personType: personType,
+      army: army,
+      unit: unit,
+      job: job,
+      militaryRank: militaryRank,
+      administrator: administrator,
+      department: department["departmentId"],
+      meetingId: meetingId,
+    });
 
     return this.getMeetingById(meetingId);
   }
@@ -126,7 +165,7 @@ class MeetingService {
       }
     );
 
-    logger.info("Delete meeting done")
+    logger.info("Delete meeting done");
 
     return meeting;
   }
@@ -139,7 +178,20 @@ class MeetingService {
       if (err) logger.error(err);
     });
 
-    logger.info("Delete all meeting done")
+    logger.info("Delete all meeting done");
+
+    return meetings;
+  }
+
+  async hideAll() {
+    const meetings = await this.getMeetings();
+    const query = "UPDATE meeting SET hidden=?";
+
+    sql.query(query, [true], (err, result) => {
+      if (err) logger.error(err);
+    });
+
+    logger.info("hide all meeting done");
 
     return meetings;
   }
@@ -148,7 +200,7 @@ class MeetingService {
     if (departmentId)
       return new Promise((resolve, reject) => {
         sql.query(
-          "SELECT meetingId, status, comeAt, enteredAt, exitAt, delayDate, personName, personType, army, unit, job, militaryRank, administrator, departmentId, departmentName FROM meeting JOIN department d USING(departmentId) WHERE departmentId=?;",
+          "SELECT meetingId, status, comeAt, enteredAt, exitAt, delayDate, personName, personType, army, unit, job, militaryRank, administrator, IF(hidden, 'true', 'false') hidden, departmentId, departmentName FROM meeting JOIN department d USING(departmentId) WHERE departmentId=?;",
           [departmentId],
           (err, result, field) => {
             if (err) reject(err);
@@ -160,7 +212,7 @@ class MeetingService {
     else
       return new Promise((resolve, reject) => {
         sql.query(
-          "SELECT meetingId, status, comeAt, enteredAt, exitAt, delayDate, personName, personType, army, unit, job, militaryRank, administrator, departmentId, departmentName FROM meeting JOIN department d USING(departmentId);",
+          "SELECT meetingId, status, comeAt, enteredAt, exitAt, delayDate, personName, personType, army, unit, job, militaryRank, administrator, IF(hidden, 'true', 'false') hidden, departmentId, departmentName FROM meeting JOIN department d USING(departmentId);",
           (err, result, field) => {
             if (err) reject(err);
 
@@ -175,7 +227,7 @@ class MeetingService {
 
     return new Promise((resolve, reject) => {
       sql.query(
-        "SELECT meetingId, status, comeAt, enteredAt, exitAt, delayDate, personName, personType, army, unit, job, militaryRank, administrator, departmentId, departmentName FROM meeting JOIN department d USING(departmentId) WHERE meetingId= ?;",
+        "SELECT meetingId, status, comeAt, enteredAt, exitAt, delayDate, personName, personType, army, unit, job, militaryRank, administrator, IF(hidden, 'true', 'false') hidden, departmentId, departmentName FROM meeting JOIN department d USING(departmentId) WHERE meetingId= ?;",
         [meetingId],
         (err, result, field) => {
           if (err) reject(err);
@@ -190,7 +242,7 @@ class MeetingService {
 
   getMeetingById(meetingId) {
     let query =
-      "SELECT meetingId, status, comeAt, enteredAt, exitAt, delayDate, personName, personType, army, unit, job, militaryRank, administrator, departmentId, departmentName FROM meeting JOIN department d USING(departmentId) WHERE meetingId= ?;";
+      "SELECT meetingId, status, comeAt, enteredAt, exitAt, delayDate, personName, personType, army, unit, job, militaryRank, administrator, IF(hidden, 'true', 'false') hidden, departmentId, departmentName FROM meeting JOIN department d USING(departmentId) WHERE meetingId= ?;";
 
     return new Promise((resolve, reject) => {
       sql.query(query, [meetingId], (err, result, field) => {

@@ -46,6 +46,7 @@ const InquiresScreen = () => {
       if (date.action === "update") updateMeeting(date.meeting);
       if (date.action === "delete") deleteMeeting(date.meeting);
       if (date.action === "deleteAll") deleteAllMeeting(date.meetings);
+      if (date.action === "hideAll") hideAllMeeting(date.meetings);
     });
   };
 
@@ -53,6 +54,7 @@ const InquiresScreen = () => {
     const fetchedMeetings = await meetingApi.getAll();
     meetings = fetchedMeetings.slice(0);
 
+    console.log(fetchedMeetings);
     setFetchedMeetings(fetchedMeetings);
     setFetched(true);
   };
@@ -76,6 +78,15 @@ const InquiresScreen = () => {
     setFetchedMeetings(() => [...[], ...[]]);
   };
 
+  const hideAllMeeting = () => {
+    let newMeetings = meetings.slice(0);
+    newMeetings.map((obj) => {
+      obj["hidden"] = true;
+    });
+
+    setFetchedMeetings(newMeetings);
+  };
+
   const updateMeeting = (meeting) => {
     let newMeetings = meetings.slice(0);
     newMeetings.map((obj) => {
@@ -91,6 +102,7 @@ const InquiresScreen = () => {
         obj["unit"] = meeting["unit"];
         obj["army"] = meeting["army"];
         obj["administrator"] = meeting["administrator"];
+        obj["hidden"] = meeting["hidden"];
         obj["departmentId"] = meeting["departmentId"];
         obj["departmentName"] = meeting["departmentName"];
       }
@@ -102,6 +114,15 @@ const InquiresScreen = () => {
   const handleDeleteAll = async () => {
     try {
       await meetingApi.removeAll();
+      toast.warning("لقد تم حذف كل الاجتماعات");
+    } catch (error) {
+      toast.error("لقد حدث خطأ ما, لم يتم حذف كل الاجتماعات");
+    }
+  };
+
+  const handleHideAll = async () => {
+    try {
+      await meetingApi.hideAll();
       toast.warning("لقد تم حذف كل الاجتماعات");
     } catch (error) {
       toast.error("لقد حدث خطأ ما, لم يتم حذف كل الاجتماعات");
@@ -135,20 +156,22 @@ const InquiresScreen = () => {
         {fetchedMeetings &&
           fetchedMeetings.map((meeting) => {
             return (
-              <AppCard
-                meeting={meeting}
-                cardColor={
-                  meeting["status"].includes("Rejected")
-                    ? "danger"
-                    : meeting["status"].includes("Accepted")
-                    ? "success"
-                    : meeting["status"].includes("Delayed")
-                    ? "warning"
-                    : meeting["status"].includes("Exit")
-                    ? "dark"
-                    : "primary"
-                }
-              />
+              meeting["hidden"] === "false" && (
+                <AppCard
+                  meeting={meeting}
+                  cardColor={
+                    meeting["status"].includes("Rejected")
+                      ? "danger"
+                      : meeting["status"].includes("Accepted")
+                      ? "success"
+                      : meeting["status"].includes("Delayed")
+                      ? "warning"
+                      : meeting["status"].includes("Exit")
+                      ? "dark"
+                      : "primary"
+                  }
+                />
+              )
             );
           })}
       </CardColumns>
@@ -175,7 +198,7 @@ const InquiresScreen = () => {
           <Button
             variant="danger"
             style={styles.button}
-            onClick={handleDeleteAll}
+            onClick={handleHideAll}
           >
             <MdDeleteForever size={40} />
           </Button>
