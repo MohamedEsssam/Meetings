@@ -117,7 +117,18 @@ const CommenderScreen = () => {
         inputValue={inputValue}
         setInputValue={setInputValue}
       />
-      <CardColumns style={{ margin: "20px" }}>
+      <div
+        style={{
+          position: "relative",
+          float: "right",
+          top: "20px",
+          right: "15px",
+          display: "flex",
+          flexWrap: "wrap",
+          flex: "0 0 33.333333%",
+          maxWidth: "90%",
+        }}
+      >
         {fetchedMeetings &&
           fetchedMeetings.map((meeting) => {
             return meeting["status"].includes(radioValue) &&
@@ -141,7 +152,7 @@ const CommenderScreen = () => {
                   )
               : "";
           })}
-      </CardColumns>
+      </div>
     </>
   );
 };

@@ -61,6 +61,9 @@ function AppLoginForm(props) {
 
   return (
     <>
+    <h1 style={{ position:"relative", top:"250px", left:"40%"}}>منظومة الاجتماعات</h1>
+    <div style={{ position:"relative", right:"45%", top:"300px" }}>
+      
       <FromContainer
         initialValues={{ username: "", password: "" }}
         validationSchema={validationSchema}
@@ -70,9 +73,12 @@ function AppLoginForm(props) {
           <FormErrorMessage error={error} visible={loginFailed} />
           <FormField name="username" label="أدخل اسم المستخدم" />
           <FormField name="password" label="أدخل كلمة السر" type="password" />
+          <div style={{ position:"relative", left:"120px" }}>
           <SubmitButton title="دخول" />
+          </div>
         </>
       </FromContainer>
+    </div>
     </>
   );
 }

@@ -51,7 +51,7 @@ const CommenderScreen = () => {
 
     const fetchedMeetings = await meetingApi.getAll();
     meetings = fetchedMeetings.slice(0);
-    setFetchedMeetings(fetchedMeetings);
+    setFetchedMeetings(fetchedMeetings.reverse());
 
     setFetched(true);
   };

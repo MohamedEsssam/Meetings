@@ -145,12 +145,16 @@ const InquiresScreen = () => {
           </Button>
         </AppPopOvers>
       </div>
-      <CardColumns
+      <div
         style={{
-          margin: "20px",
-          maxWidth: "1700px",
-          maxHeight: "300",
+          position: "relative",
           float: "right",
+          top: "20px",
+          right: "15px",
+          display: "flex",
+          flexWrap: "wrap",
+          flex: "0 0 33.333333%",
+          maxWidth: "90%",
         }}
       >
         {fetchedMeetings &&
@@ -174,8 +178,7 @@ const InquiresScreen = () => {
               )
             );
           })}
-      </CardColumns>
-
+      </div>
       <div style={{ position: "fixed", top: "74%", left: "10px" }}>
         <div>
           <AppPopOvers

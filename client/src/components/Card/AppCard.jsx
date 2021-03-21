@@ -79,7 +79,7 @@ const AppCard = ({
         bg={cardColor}
         text={textColor}
         className="mb-2"
-        style={{ direction: "ltr", minWidth: "500px" }}
+        style={{ direction: "ltr", minWidth: "500px", marginLeft:"10px" }}
       >
         <Card.Header>
           <AppPopOvers
