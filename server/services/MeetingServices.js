@@ -200,7 +200,7 @@ class MeetingService {
     if (departmentId)
       return new Promise((resolve, reject) => {
         sql.query(
-          "SELECT meetingId, status, comeAt, enteredAt, exitAt, delayDate, personName, personType, army, unit, job, militaryRank, administrator, IF(hidden, 'true', 'false') hidden, departmentId, departmentName FROM meeting JOIN department d USING(departmentId) WHERE departmentId=?;",
+          "SELECT meetingId, status, comeAt, enteredAt, exitAt, delayDate, personName, personType, army, unit, job, militaryRank, administrator, IF(hidden, 'true', 'false') hidden, departmentId, departmentName FROM meeting JOIN department d USING(departmentId) WHERE departmentId=? ORDER BY comeAt DESC;",
           [departmentId],
           (err, result, field) => {
             if (err) reject(err);
