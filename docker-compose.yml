@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  client:
+    build: ./client
+    ports:
+      - 3000:3000
+    depends_on:
+      - server
+      - db
+
+  server:
+    build: ./server
+    ports:
+      - 9000:9000
+    volumes:
+      - ./server:/app
+    command: ./docker-entrypoint.sh
+    depends_on:
+      - db
+    links:
+      - db
+
+  db:
+    image: mysql:5.5.62
+    ports:
+      - 3306:3306
+    volumes:
+      - meeting:/data/db
+
+volumes:
+  meeting:

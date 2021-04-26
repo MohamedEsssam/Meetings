@@ -29,9 +29,9 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "swagger-ui-express": "^4.1.6",
     "chai": "^4.2.0",
     "mocha": "^6.2.1",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "swagger-ui-express": "^4.1.6"
   }
 }
