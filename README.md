@@ -16,7 +16,7 @@
         <img src="https://img.shields.io/npm/v/npm" alt="NPM Shield Badge"/>
     </a>
     <a href="https://github.com/MohamedEsssam/DoneWithIt/stargazers">
-        <img src="https://img.shields.io/github/stars/MohamedEsssam/meetigs?style=social" alt="Done With It Stars" >
+        <img src="https://img.shields.io/github/stars/MohamedEsssam/meetings?style=social" alt="Done With It Stars" >
     </a>
 </p>
 <p align="center">
